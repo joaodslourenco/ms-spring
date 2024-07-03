@@ -30,15 +30,13 @@ class UserControllerTest {
         BDDMockito.when(userServiceMock.save(UserCreator.userRecordCreateDto())).thenReturn(UserCreator.validUser());
     }
 
-
     @Test
-    @DisplayName("Save returns success when user is created")
+    @DisplayName("Save returns user when successful")
     void save() {
         UserRecordCreateDto userRecordCreateDto = UserCreator.userRecordCreateDto();
 
         ResponseEntity<UserModel> savedUserResponse = userController.save(userRecordCreateDto);
 
-        log.info(savedUserResponse);
         Assertions.assertThat(savedUserResponse.getBody()).isNotNull();
         Assertions.assertThat(savedUserResponse.getStatusCode()).isEqualTo(HttpStatus.CREATED);
     }
