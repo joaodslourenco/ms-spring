@@ -1,5 +1,6 @@
 package com.e_commerce.users.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Data;
@@ -7,14 +8,14 @@ import lombok.Data;
 import java.io.Serializable;
 import java.util.UUID;
 
-@Entity
-@Table(name = "tb_addresses")
 @Data
+@Entity
 @Builder
+@Table(name = "tb_addresses")
 public class AddressModel implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
     @Column(name = "street", nullable = false)
@@ -36,5 +37,6 @@ public class AddressModel implements Serializable {
     private String country;
 
     @OneToOne(mappedBy = "address")
+    @JsonIgnore
     private UserModel user;
 }

@@ -8,16 +8,16 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.util.UUID;
 
-@Entity
-@Table(name = "tb_users")
 @Data
+@Entity
 @Builder
+@Table(name = "tb_users")
 public class UserModel implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
     @Column(name = "name", nullable = false)
@@ -38,5 +38,4 @@ public class UserModel implements Serializable {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "address_id", referencedColumnName = "id")
     private AddressModel address;
-
 }
