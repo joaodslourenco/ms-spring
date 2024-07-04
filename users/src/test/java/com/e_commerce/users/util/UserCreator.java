@@ -1,11 +1,8 @@
 package com.e_commerce.users.util;
 
-import com.e_commerce.users.dtos.AddressRecordCreateDto;
 import com.e_commerce.users.dtos.UserRecordCreateDto;
 import com.e_commerce.users.models.AddressModel;
 import com.e_commerce.users.models.UserModel;
-import org.mockito.ArgumentMatchers;
-import org.springframework.security.core.userdetails.User;
 
 import java.util.UUID;
 
@@ -17,15 +14,8 @@ public class UserCreator {
                 .password("senhaSegura")
                 .cpf("123.456.789-00")
                 .phone("+55-11-98765-4321")
-                .address(AddressRecordCreateDto.builder()
-                        .street("Rua Principal, 123")
-                        .neighbourhood("Centro")
-                        .city("São Paulo")
-                        .state("SP")
-                        .zipCode("01001-000")
-                        .country("Brasil")
-                        .build()
-                ).build();
+                .address(AddressCreator.addressRecordCreateDto())
+                .build();
     }
 
     public static UserModel validUser() {
@@ -36,15 +26,16 @@ public class UserCreator {
                 .password("senhaSegura")
                 .cpf("123.456.789-00")
                 .phone("+55-11-98765-4321")
-                .address(AddressModel.builder()
-                        .id(UUID.fromString("ffa67750-2493-42f7-b3be-f42fc3a1d758"))
-                        .street("Rua Principal, 123")
-                        .neighbourhood("Centro")
-                        .city("São Paulo")
-                        .state("SP")
-                        .zipCode("01001-000")
-                        .country("Brasil")
-                        .build()
+                .address(
+                        AddressModel.builder()
+                                .id(UUID.fromString("ffa67750-2493-42f7-b3be-f42fc3a1d758"))
+                                .street("Rua Principal, 123")
+                                .neighbourhood("Centro")
+                                .city("São Paulo")
+                                .state("SP")
+                                .zipCode("01001-000")
+                                .country("Brasil")
+                                .build()
                 ).build();
     }
 }
