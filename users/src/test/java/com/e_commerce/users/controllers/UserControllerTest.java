@@ -4,20 +4,19 @@ import com.e_commerce.users.dtos.UserRecordCreateDto;
 import com.e_commerce.users.models.UserModel;
 import com.e_commerce.users.services.UserService;
 import com.e_commerce.users.util.UserCreator;
-import lombok.extern.log4j.Log4j2;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.BDDMockito;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-@SpringBootTest
-@Log4j2
+@ExtendWith(SpringExtension.class)
 class UserControllerTest {
     @InjectMocks
     private UserController userController;
@@ -31,8 +30,8 @@ class UserControllerTest {
     }
 
     @Test
-    @DisplayName("Save returns user when successful")
-    void save() {
+    @DisplayName("Save creates user when successful")
+    void save_CreatesUser_WhenSuccessful() {
         UserRecordCreateDto userRecordCreateDto = UserCreator.userRecordCreateDto();
 
         ResponseEntity<UserModel> savedUserResponse = userController.save(userRecordCreateDto);
@@ -40,4 +39,7 @@ class UserControllerTest {
         Assertions.assertThat(savedUserResponse.getBody()).isNotNull();
         Assertions.assertThat(savedUserResponse.getStatusCode()).isEqualTo(HttpStatus.CREATED);
     }
+
+
+
 }
