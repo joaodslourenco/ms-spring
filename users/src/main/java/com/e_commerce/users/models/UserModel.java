@@ -1,9 +1,7 @@
 package com.e_commerce.users.models;
 
 import jakarta.persistence.*;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -14,7 +12,8 @@ import java.util.UUID;
 @Getter
 @Entity
 @Builder
-@Table(name = "tb_users")
+@NoArgsConstructor
+@AllArgsConstructor
 public class UserModel implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
