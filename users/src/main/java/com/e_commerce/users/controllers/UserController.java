@@ -10,10 +10,9 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/users")
@@ -28,6 +27,16 @@ public class UserController {
     })
     public ResponseEntity<UserModel> save(@RequestBody @Valid UserRecordCreateDto userRecordCreateDto) {
         return new ResponseEntity<>(userService.save(userRecordCreateDto), HttpStatus.CREATED);
+    }
+
+    @GetMapping("/{id}")
+    @Operation(summary = "Finds a User by Id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Returns the requested user data"),
+            @ApiResponse(responseCode = "400", description = "The requested ID was not found")
+    })
+    public ResponseEntity<UserModel> findById(@PathVariable UUID id) {
+        return new ResponseEntity<>(userService.findById(id), HttpStatus.OK);
     }
 
 

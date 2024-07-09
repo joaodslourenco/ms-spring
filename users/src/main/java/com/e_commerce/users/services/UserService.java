@@ -1,6 +1,7 @@
 package com.e_commerce.users.services;
 
 import com.e_commerce.users.dtos.UserRecordCreateDto;
+import com.e_commerce.users.exceptions.BadRequestException;
 import com.e_commerce.users.mappers.AddressMapper;
 import com.e_commerce.users.mappers.UserMapper;
 import com.e_commerce.users.models.AddressModel;
@@ -10,6 +11,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -30,4 +33,10 @@ public class UserService {
 
         return userRepository.save(newUser);
     }
+
+    public UserModel findById(UUID id) {
+        log.info("id do service: {}", id);
+        return userRepository.findById(id).orElseThrow(() -> new BadRequestException("User not found."));
+    }
+
 }
