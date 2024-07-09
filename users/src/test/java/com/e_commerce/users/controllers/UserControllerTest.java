@@ -63,7 +63,6 @@ class UserControllerTest {
 
         ResponseEntity<UserModel> user = userController.findById(expectedId);
 
-
         Assertions.assertThat(user.getBody()).isNotNull();
         Assertions.assertThat(user.getBody().getId()).isEqualTo(expectedId);
     }
@@ -76,6 +75,29 @@ class UserControllerTest {
         BDDMockito.when(userServiceMock.findById(invalidId)).thenThrow(new BadRequestException("User not found"));
 
         Assertions.assertThatExceptionOfType(BadRequestException.class).isThrownBy(() -> userController.findById(invalidId));
+    }
+
+    @Test
+    @DisplayName("delete removes user when successful")
+    void delete_RemovesUser_WhenSuccessful() {
+        UUID expectedId = UserCreator.validUser().getId();
+
+        Assertions.assertThatCode(() -> userController.delete(expectedId)).doesNotThrowAnyException();
+
+        ResponseEntity<Void> entity = userController.delete(expectedId);
+
+        Assertions.assertThat(entity).isNotNull();
+        Assertions.assertThat(entity.getStatusCode()).isEqualTo(HttpStatus.OK);
+    }
+
+    @Test
+    @DisplayName("delete throws Bad Request when no user was found")
+    void delete_ThrowsBadRequest_WhenNoUserWasFound() {
+        UUID expectedId = UserCreator.validUser().getId();
+
+        BDDMockito.doThrow(new BadRequestException("User not found")).when(userServiceMock).delete(expectedId);
+
+        Assertions.assertThatExceptionOfType(BadRequestException.class).isThrownBy(() -> userController.delete(expectedId));
     }
 
 

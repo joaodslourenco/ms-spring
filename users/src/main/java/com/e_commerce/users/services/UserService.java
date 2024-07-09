@@ -44,8 +44,15 @@ public class UserService {
         return userRepository.findById(id).orElseThrow(() -> new BadRequestException("User not found."));
     }
 
+    public void delete(UUID id) {
+        UserModel user = this.findById(id);
+
+        userRepository.delete(user);
+    }
+
     private UserModel findByEmailOrCpf(UserRecordCreateDto userRecordCreateDto) {
         return userRepository.findByEmailOrCpf(userRecordCreateDto.email(), userRecordCreateDto.cpf());
     }
+
 
 }

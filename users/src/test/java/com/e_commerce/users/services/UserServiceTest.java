@@ -14,10 +14,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentMatchers;
-import org.mockito.BDDMockito;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
+import org.mockito.*;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.Optional;
@@ -65,7 +62,7 @@ class UserServiceTest {
         UserModel savedUser = userService.save(newUser);
 
         BDDMockito.when(userRepositoryMock.findByEmailOrCpf(ArgumentMatchers.anyString(), ArgumentMatchers.anyString()))
-                        .thenReturn(savedUser);
+                .thenReturn(savedUser);
 
         Assertions.assertThatExceptionOfType(BadRequestException.class)
                 .isThrownBy(() -> userService.save(newUser))
@@ -92,5 +89,29 @@ class UserServiceTest {
         Assertions.assertThatExceptionOfType(BadRequestException.class)
                 .isThrownBy(() -> userService.findById(invalidId))
                 .withMessageContaining("User not found.");
+    }
+
+    @Test
+    @DisplayName("delete removes user when successful")
+    void delete_RemovesUser_WhenSuccessful() {
+        UserModel user = UserCreator.validUser();
+
+        BDDMockito.when(userRepositoryMock.findById(user.getId())).thenReturn(Optional.of(user));
+
+        Assertions.assertThatCode(() -> userService.delete(user.getId())).doesNotThrowAnyException();
+
+        BDDMockito.verify(userRepositoryMock, Mockito.times(1)).delete(user);
+
+    }
+
+
+    @Test
+    @DisplayName("delete throws Bad Request when no user was found")
+    void delete_ThrowsBadRequest_WhenNoUserWasFound() {
+        UserModel user = UserCreator.validUser();
+
+        BDDMockito.doThrow(new BadRequestException("User not found")).when(userRepositoryMock).delete(user);
+
+        Assertions.assertThatExceptionOfType(BadRequestException.class).isThrownBy(() -> userService.delete(user.getId()));
     }
 }
