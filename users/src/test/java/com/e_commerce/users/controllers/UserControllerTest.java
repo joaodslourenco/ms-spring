@@ -45,6 +45,16 @@ class UserControllerTest {
         Assertions.assertThat(savedUserResponse.getStatusCode()).isEqualTo(HttpStatus.CREATED);
     }
 
+    @Test
+    @DisplayName("Save throws BadRequestException if an user with same email or cpf already exists")
+    void save_ThrowsBadRequest_WhenUserWithSameEmailOrCpfAlreadyExists() {
+        UserRecordCreateDto userRecordCreateDto = UserCreator.userRecordCreateDto();
+
+        BDDMockito.when(userServiceMock.save(ArgumentMatchers.any(UserRecordCreateDto.class))).thenThrow(new BadRequestException("User already exists."));
+
+        Assertions.assertThatExceptionOfType(BadRequestException.class).isThrownBy(() -> userController.save(userRecordCreateDto));
+    }
+
 
     @Test
     @DisplayName("findById retrieves user")

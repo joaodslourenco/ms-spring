@@ -43,7 +43,6 @@ class UserServiceTest {
         BDDMockito.when(userMapper.toUserModel(UserCreator.userRecordCreateDto())).thenReturn(UserCreator.validUser());
         BDDMockito.when(addressMapper.toAddress(AddressCreator.addressRecordCreateDto())).thenReturn(AddressCreator.validAddress());
         BDDMockito.when(userRepositoryMock.save(UserCreator.validUser())).thenReturn(UserCreator.validUser());
-
         BDDMockito.when(userRepositoryMock.findById(ArgumentMatchers.any(UUID.class))).thenReturn(Optional.empty());
         BDDMockito.when(userRepositoryMock.findById(UserCreator.validUser().getId())).thenReturn(Optional.ofNullable(UserCreator.validUser()));
     }
@@ -57,6 +56,20 @@ class UserServiceTest {
 
         Assertions.assertThat(savedUser).isNotNull();
         Assertions.assertThat(savedUser).isEqualTo(UserCreator.validUser());
+    }
+
+    @Test
+    @DisplayName("Save throws BadRequestException if an user with same email or cpf already exists")
+    void save_ThrowsBadRequest_WhenUserWithSameEmailOrCpfAlreadyExists() {
+        UserRecordCreateDto newUser = UserCreator.userRecordCreateDto();
+        UserModel savedUser = userService.save(newUser);
+
+        BDDMockito.when(userRepositoryMock.findByEmailOrCpf(ArgumentMatchers.anyString(), ArgumentMatchers.anyString()))
+                        .thenReturn(savedUser);
+
+        Assertions.assertThatExceptionOfType(BadRequestException.class)
+                .isThrownBy(() -> userService.save(newUser))
+                .withMessageContaining("User already exists.");
     }
 
     @Test

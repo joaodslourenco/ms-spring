@@ -25,6 +25,12 @@ public class UserService {
 
     @Transactional
     public UserModel save(UserRecordCreateDto userRecordCreateDto) {
+        UserModel existingUser = findByEmailOrCpf(userRecordCreateDto);
+
+        if (existingUser != null) {
+            throw new BadRequestException("User already exists.");
+        }
+
         UserModel newUser = userMapper.toUserModel(userRecordCreateDto);
         AddressModel address = addressMapper.toAddress(userRecordCreateDto.address());
 
@@ -36,6 +42,10 @@ public class UserService {
 
     public UserModel findById(UUID id) {
         return userRepository.findById(id).orElseThrow(() -> new BadRequestException("User not found."));
+    }
+
+    private UserModel findByEmailOrCpf(UserRecordCreateDto userRecordCreateDto) {
+        return userRepository.findByEmailOrCpf(userRecordCreateDto.email(), userRecordCreateDto.cpf());
     }
 
 }
