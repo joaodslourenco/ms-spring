@@ -35,7 +35,6 @@ public class UserService {
     }
 
     public UserModel findById(UUID id) {
-        log.info("id do service: {}", id);
         return userRepository.findById(id).orElseThrow(() -> new BadRequestException("User not found."));
     }
 
