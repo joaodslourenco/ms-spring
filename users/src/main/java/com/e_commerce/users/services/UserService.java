@@ -1,6 +1,7 @@
 package com.e_commerce.users.services;
 
 import com.e_commerce.users.dtos.UserRecordCreateDto;
+import com.e_commerce.users.dtos.UserRecordUpdateDto;
 import com.e_commerce.users.exceptions.BadRequestException;
 import com.e_commerce.users.mappers.AddressMapper;
 import com.e_commerce.users.mappers.UserMapper;
@@ -48,6 +49,14 @@ public class UserService {
         UserModel user = this.findById(id);
 
         userRepository.delete(user);
+    }
+
+    public UserModel update(UUID id, UserRecordUpdateDto userRecordUpdateDto) {
+        UserModel savedUser = this.findById(id);
+
+        userMapper.updateUserFromDto(userRecordUpdateDto, savedUser);
+
+        return userRepository.save(savedUser);
     }
 
     private UserModel findByEmailOrCpf(UserRecordCreateDto userRecordCreateDto) {

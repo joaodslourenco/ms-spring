@@ -1,6 +1,7 @@
 package com.e_commerce.users.util;
 
 import com.e_commerce.users.dtos.UserRecordCreateDto;
+import com.e_commerce.users.dtos.UserRecordUpdateDto;
 import com.e_commerce.users.models.AddressModel;
 import com.e_commerce.users.models.UserModel;
 
@@ -15,6 +16,14 @@ public class UserCreator {
                 .cpf("123.456.789-00")
                 .phone("+55-11-98765-4321")
                 .address(AddressCreator.addressRecordCreateDto())
+                .build();
+    }
+
+    public static UserRecordUpdateDto userRecordUpdateDto() {
+        return UserRecordUpdateDto.builder()
+                .name("João Editado")
+                .email("emaileditad@teste.com")
+                .address(AddressCreator.addressRecordUpdateDto())
                 .build();
     }
 

@@ -1,6 +1,7 @@
 package com.e_commerce.users.util;
 
 import com.e_commerce.users.dtos.AddressRecordCreateDto;
+import com.e_commerce.users.dtos.AddressRecordUpdateDto;
 import com.e_commerce.users.models.AddressModel;
 
 import java.util.UUID;
@@ -15,6 +16,13 @@ public class AddressCreator {
                 .state("Estado")
                 .country("Brazuca")
                 .zipCode("12345567")
+                .build();
+    }
+
+    public static AddressRecordUpdateDto addressRecordUpdateDto() {
+        return AddressRecordUpdateDto.builder()
+                .city("Cidade editada")
+                .state("Estado editado")
                 .build();
     }
 

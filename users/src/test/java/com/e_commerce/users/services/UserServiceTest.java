@@ -1,6 +1,7 @@
 package com.e_commerce.users.services;
 
 import com.e_commerce.users.dtos.UserRecordCreateDto;
+import com.e_commerce.users.dtos.UserRecordUpdateDto;
 import com.e_commerce.users.exceptions.BadRequestException;
 import com.e_commerce.users.mappers.AddressMapper;
 import com.e_commerce.users.mappers.UserMapper;
@@ -19,6 +20,8 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.Optional;
 import java.util.UUID;
+
+import static org.mockito.Mockito.verify;
 
 @ExtendWith(SpringExtension.class)
 @Log4j2
@@ -100,7 +103,7 @@ class UserServiceTest {
 
         Assertions.assertThatCode(() -> userService.delete(user.getId())).doesNotThrowAnyException();
 
-        BDDMockito.verify(userRepositoryMock, Mockito.times(1)).delete(user);
+        verify(userRepositoryMock, Mockito.times(1)).delete(user);
 
     }
 
@@ -113,5 +116,33 @@ class UserServiceTest {
         BDDMockito.doThrow(new BadRequestException("User not found")).when(userRepositoryMock).delete(user);
 
         Assertions.assertThatExceptionOfType(BadRequestException.class).isThrownBy(() -> userService.delete(user.getId()));
+    }
+
+    @Test
+    @DisplayName("update modifies user when successful")
+    void update_ModifierUser_WhenSuccessful() {
+        UserModel user = UserCreator.validUser();
+        UUID userId = user.getId();
+
+        UserRecordUpdateDto userRecordUpdateDto = UserCreator.userRecordUpdateDto();
+        BDDMockito.when(userRepositoryMock.save(ArgumentMatchers.any(UserModel.class))).thenReturn(UserModel.builder().build());
+
+        Assertions.assertThatCode(() -> userService.update(userId, userRecordUpdateDto)).doesNotThrowAnyException();
+
+        verify(userRepositoryMock).findById(userId);
+        verify(userMapper).updateUserFromDto(userRecordUpdateDto, user);
+        verify(userRepositoryMock).save(user);
+    }
+
+    @Test
+    @DisplayName("update throws Bad Request when no user was found")
+    void update_ThrowsBadRequest_WhenNoUserWasFound() {
+        UUID expectedId = UserCreator.validUser().getId();
+
+        BDDMockito.doThrow(new BadRequestException("User not found"))
+                .when(userRepositoryMock).findById(expectedId);
+
+        Assertions.assertThatExceptionOfType(BadRequestException.class)
+                .isThrownBy(() -> userService.update(expectedId, UserCreator.userRecordUpdateDto()));
     }
 }

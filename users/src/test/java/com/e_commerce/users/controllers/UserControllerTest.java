@@ -1,6 +1,7 @@
 package com.e_commerce.users.controllers;
 
 import com.e_commerce.users.dtos.UserRecordCreateDto;
+import com.e_commerce.users.dtos.UserRecordUpdateDto;
 import com.e_commerce.users.exceptions.BadRequestException;
 import com.e_commerce.users.models.UserModel;
 import com.e_commerce.users.services.UserService;
@@ -32,6 +33,7 @@ class UserControllerTest {
     void setup() {
         BDDMockito.when(userServiceMock.save(UserCreator.userRecordCreateDto())).thenReturn(UserCreator.validUser());
         BDDMockito.when(userServiceMock.findById(ArgumentMatchers.any(UUID.class))).thenReturn(UserCreator.validUser());
+        BDDMockito.when(userServiceMock.update(UserCreator.validUser().getId(), UserCreator.userRecordUpdateDto())).thenReturn(UserCreator.validUser());
     }
 
     @Test
@@ -98,6 +100,35 @@ class UserControllerTest {
         BDDMockito.doThrow(new BadRequestException("User not found")).when(userServiceMock).delete(expectedId);
 
         Assertions.assertThatExceptionOfType(BadRequestException.class).isThrownBy(() -> userController.delete(expectedId));
+    }
+
+    @Test
+    @DisplayName("update modifies user when successful")
+    void update_ModifierUser_WhenSuccessful() {
+        UserModel user = UserCreator.validUser();
+
+        UserRecordUpdateDto userRecordUpdateDto = UserCreator.userRecordUpdateDto();
+
+        Assertions.assertThatCode(() -> userController.update(user.getId(), userRecordUpdateDto)).doesNotThrowAnyException();
+
+        ResponseEntity<UserModel> responseEntity = userController.update(user.getId(), userRecordUpdateDto);
+
+        UserModel responseBody = responseEntity.getBody();
+
+        Assertions.assertThat(responseBody).isNotNull();
+        Assertions.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
+    }
+
+    @Test
+    @DisplayName("update throws Bad Request when no user was found")
+    void update_ThrowsBadRequest_WhenNoUserWasFound() {
+        UUID expectedId = UserCreator.validUser().getId();
+
+        BDDMockito.doThrow(new BadRequestException("User not found"))
+                .when(userServiceMock).update(expectedId, UserCreator.userRecordUpdateDto());
+
+        Assertions.assertThatExceptionOfType(BadRequestException.class)
+                .isThrownBy(() -> userController.update(expectedId, UserCreator.userRecordUpdateDto()));
     }
 
 
