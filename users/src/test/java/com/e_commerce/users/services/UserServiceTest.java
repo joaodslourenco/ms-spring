@@ -16,6 +16,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.Optional;
@@ -33,15 +34,22 @@ class UserServiceTest {
     private UserRepository userRepositoryMock;
 
     @Mock
-    private UserMapper userMapper;
+    private AuthService authServiceMock;
 
     @Mock
-    private AddressMapper addressMapper;
+    private UserMapper userMapperMock;
+
+    @Mock
+    private AddressMapper addressMapperMock;
+
+    @Mock
+    private PasswordEncoder passwordEncoderMock;
 
     @BeforeEach
     void setup() {
-        BDDMockito.when(userMapper.toUserModel(UserCreator.userRecordCreateDto())).thenReturn(UserCreator.validUser());
-        BDDMockito.when(addressMapper.toAddress(AddressCreator.addressRecordCreateDto())).thenReturn(AddressCreator.validAddress());
+        BDDMockito.when(passwordEncoderMock.encode(ArgumentMatchers.anyString())).thenReturn(ArgumentMatchers.anyString());
+        BDDMockito.when(userMapperMock.toUserModel(UserCreator.userRecordCreateDto())).thenReturn(UserCreator.validUser());
+        BDDMockito.when(addressMapperMock.toAddress(AddressCreator.addressRecordCreateDto())).thenReturn(AddressCreator.validAddress());
         BDDMockito.when(userRepositoryMock.save(UserCreator.validUser())).thenReturn(UserCreator.validUser());
         BDDMockito.when(userRepositoryMock.findById(ArgumentMatchers.any(UUID.class))).thenReturn(Optional.empty());
         BDDMockito.when(userRepositoryMock.findById(UserCreator.validUser().getId())).thenReturn(Optional.ofNullable(UserCreator.validUser()));
@@ -64,7 +72,7 @@ class UserServiceTest {
         UserRecordCreateDto newUser = UserCreator.userRecordCreateDto();
         UserModel savedUser = userService.save(newUser);
 
-        BDDMockito.when(userRepositoryMock.findByEmailOrCpf(ArgumentMatchers.anyString(), ArgumentMatchers.anyString()))
+        BDDMockito.when(userRepositoryMock.findByEmail(ArgumentMatchers.anyString()))
                 .thenReturn(savedUser);
 
         Assertions.assertThatExceptionOfType(BadRequestException.class)
@@ -130,7 +138,7 @@ class UserServiceTest {
         Assertions.assertThatCode(() -> userService.update(userId, userRecordUpdateDto)).doesNotThrowAnyException();
 
         verify(userRepositoryMock).findById(userId);
-        verify(userMapper).updateUserFromDto(userRecordUpdateDto, user);
+        verify(userMapperMock).updateUserFromDto(userRecordUpdateDto, user);
         verify(userRepositoryMock).save(user);
     }
 
