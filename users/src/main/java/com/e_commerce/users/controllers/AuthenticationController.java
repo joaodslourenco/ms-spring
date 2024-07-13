@@ -1,6 +1,9 @@
 package com.e_commerce.users.controllers;
 
+import com.e_commerce.users.config.TokenService;
 import com.e_commerce.users.dtos.AuthenticationLoginDto;
+import com.e_commerce.users.dtos.LoginResponseDto;
+import com.e_commerce.users.models.UserModel;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -18,14 +21,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Log4j2
 public class AuthenticationController {
     private final AuthenticationManager authenticationManager;
+    private final TokenService tokenService;
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody @Valid AuthenticationLoginDto dto) {
+    public ResponseEntity<LoginResponseDto> login(@RequestBody @Valid AuthenticationLoginDto dto) {
         var usernamePassword = new UsernamePasswordAuthenticationToken(dto.email(), dto.password());
 
         var auth = this.authenticationManager.authenticate(usernamePassword);
 
-        return ResponseEntity.ok().build();
+        var token = tokenService.generateToken((UserModel) auth.getPrincipal());
+
+        return ResponseEntity.ok(new LoginResponseDto(token));
     }
 
 }
