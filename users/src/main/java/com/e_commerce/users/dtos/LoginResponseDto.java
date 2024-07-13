@@ -1,4 +1,7 @@
 package com.e_commerce.users.dtos;
 
-public record LoginResponseDto(String token) {
+import lombok.Builder;
+
+@Builder
+public record LoginResponseDto(String accessToken, String refreshToken) {
 }

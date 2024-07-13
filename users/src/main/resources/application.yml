@@ -11,6 +11,9 @@ api:
   security:
     token:
       secret: ${JWT_SECRET:my-secret-key}
+      expiration: 1
+    refresh-token:
+      expiration: 12
 
 
 logging:
