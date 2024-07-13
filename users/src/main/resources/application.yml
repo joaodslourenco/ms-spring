@@ -9,10 +9,11 @@ spring:
     show-sql: true
 api:
   security:
-    token:
-      secret: ${JWT_SECRET:my-secret-key}
+    access-token:
+      secret: ${JWT_SECRET:my-secret-token-key}
       expiration: 1
     refresh-token:
+      secret: ${JWT_SECRET:my-secret-refresh-token-key}
       expiration: 12
 
 

@@ -4,6 +4,7 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
+import com.e_commerce.users.enums.ETokenType;
 import com.e_commerce.users.models.UserModel;
 import com.e_commerce.users.repositories.UserRepository;
 import jakarta.servlet.http.HttpServletRequest;
@@ -25,11 +26,14 @@ import java.time.ZoneOffset;
 public class AuthService implements UserDetailsService {
     private final UserRepository userRepository;
 
-    @Value("${api.security.token.secret}")
-    private String secret;
+    @Value("${api.security.access-token.secret}")
+    private String accessTokenSecret;
 
-    @Value("${api.security.token.expiration}")
+    @Value("${api.security.access-token.expiration}")
     private long accessTokenExpirationHours;
+
+    @Value("${api.security.refresh-token.secret}")
+    private String refreshTokenSecret;
 
     @Value("${api.security.refresh-token.expiration}")
     private long refreshTokenExpirationHours;
@@ -40,25 +44,9 @@ public class AuthService implements UserDetailsService {
         return userRepository.findByEmail(username);
     }
 
-
-    public String generateToken(UserModel user) {
+    public String validateToken(String token, ETokenType tokenType) {
         try {
-            Algorithm algorithm = Algorithm.HMAC256(secret);
-            Instant expirationDate = generateExpirationDate();
-
-            return JWT.create()
-                    .withIssuer("users-api")
-                    .withSubject(user.getEmail())
-                    .withExpiresAt(expirationDate)
-                    .sign(algorithm);
-        } catch (JWTCreationException exception) {
-            throw new RuntimeException("Error while generating token", exception);
-        }
-    }
-
-    public String validateToken(String token) {
-        try {
-            Algorithm algorithm = Algorithm.HMAC256(secret);
+            Algorithm algorithm = getAlgorithm(tokenType);
 
             return JWT.require(algorithm)
                     .withIssuer("users-api")
@@ -77,8 +65,31 @@ public class AuthService implements UserDetailsService {
         return authHeader.replace("Bearer ", "");
     }
 
-    private Instant generateExpirationDate() {
-        return LocalDateTime.now().plusHours(accessTokenExpirationHours).toInstant(ZoneOffset.of("-03:00"));
+    public String generateToken(UserModel user, ETokenType tokenType) {
+        try {
+            Algorithm algorithm = getAlgorithm(tokenType);
+            Instant expirationDate = generateExpirationDate(tokenType);
+
+            return JWT.create()
+                    .withIssuer("users-api")
+                    .withSubject(user.getEmail())
+                    .withExpiresAt(expirationDate)
+                    .sign(algorithm);
+        } catch (JWTCreationException exception) {
+            throw new RuntimeException("Error while generating token", exception);
+        }
+    }
+
+    private Instant generateExpirationDate(ETokenType tokenType) {
+        var expirationHours = tokenType == ETokenType.ACCESS ? accessTokenExpirationHours : refreshTokenExpirationHours;
+
+        return LocalDateTime.now().plusHours(expirationHours).toInstant(ZoneOffset.of("-03:00"));
+    }
+
+    private Algorithm getAlgorithm(ETokenType tokenType) {
+        var secret = tokenType == ETokenType.ACCESS ? accessTokenSecret : refreshTokenSecret;
+
+        return Algorithm.HMAC256(secret);
     }
 
 }
