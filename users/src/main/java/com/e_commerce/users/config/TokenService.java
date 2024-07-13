@@ -44,16 +44,11 @@ public class TokenService {
                     .build()
                     .verify(token);
 
-            log.info("verify: {}", verify);
-
             var subject = verify.getSubject();
-
-            log.info("subject: {}", subject);
 
             return verify
                     .getSubject();
         } catch (JWTVerificationException exception) {
-            log.info("exception braba", exception);
             return "";
         }
     }
