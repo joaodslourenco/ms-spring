@@ -16,6 +16,9 @@ api:
       secret: ${JWT_SECRET:my-secret-refresh-token-key}
       expiration: 12
 
+springdoc:
+  swagger-ui:
+    path: /swagger-ui
 
 logging:
   level:
