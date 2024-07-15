@@ -19,7 +19,6 @@ public class UserCreator {
         return UserRecordUpdateDto.builder()
                 .name("João Editado")
                 .email("emaileditad@teste.com")
-                .address(AddressCreator.addressRecordUpdateDto())
                 .build();
     }
 

@@ -50,7 +50,7 @@ class UserServiceTest {
         BDDMockito.when(passwordEncoderMock.encode(ArgumentMatchers.anyString())).thenReturn(ArgumentMatchers.anyString());
         BDDMockito.when(userMapperMock.toUserModel(UserCreator.userRecordCreateDto())).thenReturn(UserCreator.validUser());
         BDDMockito.when(addressMapperMock.toAddress(AddressCreator.addressRecordCreateDto())).thenReturn(AddressCreator.validAddress());
-        BDDMockito.when(userRepositoryMock.save(UserCreator.validUser())).thenReturn(UserCreator.validUser());
+        BDDMockito.when(userRepositoryMock.save(ArgumentMatchers.any(UserModel.class))).thenReturn(UserCreator.validUser());
         BDDMockito.when(userRepositoryMock.findById(ArgumentMatchers.any(UUID.class))).thenReturn(Optional.empty());
         BDDMockito.when(userRepositoryMock.findById(UserCreator.validUser().getId())).thenReturn(Optional.ofNullable(UserCreator.validUser()));
     }
@@ -67,12 +67,12 @@ class UserServiceTest {
     }
 
     @Test
-    @DisplayName("Save throws BadRequestException if an user with same email or cpf already exists")
-    void save_ThrowsBadRequest_WhenUserWithSameEmailOrCpfAlreadyExists() {
+    @DisplayName("Save throws BadRequestException if an user with same email already exists")
+    void save_ThrowsBadRequest_WhenUserWithSameEmailAlreadyExists() {
         UserRecordCreateDto newUser = UserCreator.userRecordCreateDto();
         UserModel savedUser = userService.save(newUser);
 
-        BDDMockito.when(userRepositoryMock.findByEmail(ArgumentMatchers.anyString()))
+        BDDMockito.when(authServiceMock.loadUserByUsername(ArgumentMatchers.anyString()))
                 .thenReturn(savedUser);
 
         Assertions.assertThatExceptionOfType(BadRequestException.class)
