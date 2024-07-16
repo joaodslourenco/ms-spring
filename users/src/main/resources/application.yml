@@ -19,9 +19,4 @@ api:
 springdoc:
   swagger-ui:
     path: /swagger-ui
-
-logging:
-  level:
-    org:
-      springframework:
-        security: DEBUG
+    title: Users API
