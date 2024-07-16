@@ -6,6 +6,7 @@ import com.e_commerce.users.exceptions.BadRequestException;
 import com.e_commerce.users.mappers.AddressMapper;
 import com.e_commerce.users.mappers.UserMapper;
 import com.e_commerce.users.models.UserModel;
+import com.e_commerce.users.repositories.AddressRepository;
 import com.e_commerce.users.repositories.UserRepository;
 import com.e_commerce.users.util.AddressCreator;
 import com.e_commerce.users.util.UserCreator;
@@ -32,6 +33,9 @@ class UserServiceTest {
 
     @Mock
     private UserRepository userRepositoryMock;
+
+    @Mock
+    private AddressRepository addressRepositoryMock;
 
     @Mock
     private AuthService authServiceMock;
@@ -153,4 +157,31 @@ class UserServiceTest {
         Assertions.assertThatExceptionOfType(BadRequestException.class)
                 .isThrownBy(() -> userService.update(expectedId, UserCreator.userRecordUpdateDto()));
     }
+
+    @Test
+    @DisplayName("createUserAddress adds address to user when successful")
+    void createUserAddress() {
+        var user = UserCreator.validUser();
+        var address = AddressCreator.addressRecordCreateDto();
+
+        UserModel userWithAddress = userService.createUserAddress(user.getId(), address);
+
+        Assertions.assertThat(userWithAddress).isNotNull();
+    }
+
+    @Test
+    @DisplayName("updateUserAddress updates address of user when successful")
+    void updateUserAddress() {
+        var user = UserCreator.validUserWithAddress();
+        var address = AddressCreator.addressRecordUpdateDto();
+
+        BDDMockito.when(userRepositoryMock.findById(user.getId())).thenReturn(Optional.ofNullable(UserCreator.validUserWithAddress()));
+        BDDMockito.when(addressRepositoryMock.findById(user.getAddress().getId())).thenReturn(Optional.of(AddressCreator.validAddress()));
+
+        UserModel userWithAddress = userService.updateUserAddress(user.getId(), address);
+
+        Assertions.assertThatCode(() -> userService.updateUserAddress(user.getId(), address)).doesNotThrowAnyException();
+        Assertions.assertThat(userWithAddress).isNotNull();
+    }
+
 }

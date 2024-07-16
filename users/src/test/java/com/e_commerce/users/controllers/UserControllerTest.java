@@ -149,6 +149,7 @@ class UserControllerTest {
     }
 
     @Test
+    @DisplayName("updateUserAddress updates address of user when successful")
     void updateUserAddress() {
         var user = UserCreator.validUser();
         var address = AddressCreator.addressRecordUpdateDto();
