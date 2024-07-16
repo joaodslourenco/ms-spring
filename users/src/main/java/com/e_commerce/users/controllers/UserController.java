@@ -1,6 +1,8 @@
 package com.e_commerce.users.controllers;
 
 import com.e_commerce.users.annotations.HasRole;
+import com.e_commerce.users.dtos.AddressRecordCreateDto;
+import com.e_commerce.users.dtos.AddressRecordUpdateDto;
 import com.e_commerce.users.dtos.UserRecordCreateDto;
 import com.e_commerce.users.dtos.UserRecordUpdateDto;
 import com.e_commerce.users.enums.ERole;
@@ -75,6 +77,44 @@ public class UserController {
     })
     public ResponseEntity<UserModel> update(@PathVariable UUID id, @RequestBody UserRecordUpdateDto userRecordUpdateDto) {
         return new ResponseEntity<>(userService.update(id, userRecordUpdateDto), HttpStatus.OK);
+    }
+
+    @PostMapping("/{id}/address")
+    @Operation(summary = "Adds address to an user if not existent")
+    @HasRole(ERole.ADMIN)
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Address added to user successfully"),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "The requested ID was not found",
+                    content = @Content(
+                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = BadRequestExceptionDetails.class)))
+    })
+    public ResponseEntity<UserModel> createUserAddress(
+            @PathVariable(name = "id") UUID userId,
+            @RequestBody AddressRecordCreateDto addressRecordCreateDto
+    ) {
+        return new ResponseEntity<>(userService.createUserAddress(userId, addressRecordCreateDto), HttpStatus.OK);
+    }
+
+    @PatchMapping("/{id}/address")
+    @Operation(summary = "Updates an existing user's address ")
+    @HasRole(ERole.ADMIN)
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "User updated successfully"),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "The requested ID was not found",
+                    content = @Content(
+                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = BadRequestExceptionDetails.class)))
+    })
+    public ResponseEntity<UserModel> updateUserAddress(
+            @PathVariable(name = "id") UUID userId,
+            @RequestBody AddressRecordUpdateDto addressRecordUpdateDto
+    ) {
+        return new ResponseEntity<>(userService.updateUserAddress(userId, addressRecordUpdateDto), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
