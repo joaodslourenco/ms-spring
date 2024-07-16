@@ -6,23 +6,23 @@ import com.e_commerce.users.dtos.RefreshTokenRequestDto;
 import com.e_commerce.users.enums.ETokenType;
 import com.e_commerce.users.models.UserModel;
 import com.e_commerce.users.services.AuthService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j2;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
+@RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
-@Log4j2
+@Tag(name = "Authentication Controller")
 public class AuthenticationController {
     private final AuthenticationManager authenticationManager;
     private final AuthService authService;
