@@ -30,4 +30,14 @@ public class UserCreator {
                 .password("senhaSegura")
                 .build();
     }
+    public static UserModel validUserWithAddress() {
+        return UserModel.builder()
+                .id(UUID.fromString("551ac484-7eac-45c2-b163-5f7bdb8c90f1"))
+                .name("João Silva")
+                .email("joaosilva@exemplo.com")
+                .password("senhaSegura")
+                .address(AddressCreator.validAddress())
+                .build();
+    }
+
 }

@@ -5,6 +5,7 @@ import com.e_commerce.users.dtos.UserRecordUpdateDto;
 import com.e_commerce.users.exceptions.BadRequestException;
 import com.e_commerce.users.models.UserModel;
 import com.e_commerce.users.services.UserService;
+import com.e_commerce.users.util.AddressCreator;
 import com.e_commerce.users.util.UserCreator;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -34,6 +35,8 @@ class UserControllerTest {
         BDDMockito.when(userServiceMock.save(UserCreator.userRecordCreateDto())).thenReturn(UserCreator.validUser());
         BDDMockito.when(userServiceMock.findById(ArgumentMatchers.any(UUID.class))).thenReturn(UserCreator.validUser());
         BDDMockito.when(userServiceMock.update(UserCreator.validUser().getId(), UserCreator.userRecordUpdateDto())).thenReturn(UserCreator.validUser());
+        BDDMockito.when(userServiceMock.createUserAddress(UserCreator.validUser().getId(), AddressCreator.addressRecordCreateDto())).thenReturn(UserCreator.validUserWithAddress());
+        BDDMockito.when(userServiceMock.updateUserAddress(UserCreator.validUser().getId(), AddressCreator.addressRecordUpdateDto())).thenReturn(UserCreator.validUserWithAddress());
     }
 
     @Test
@@ -131,5 +134,29 @@ class UserControllerTest {
                 .isThrownBy(() -> userController.update(expectedId, UserCreator.userRecordUpdateDto()));
     }
 
+    @Test
+    @DisplayName("createUserAddress adds address to user when successful")
+    void createUserAddress() {
+        var user = UserCreator.validUser();
+        var address = AddressCreator.addressRecordCreateDto();
 
+        ResponseEntity<UserModel> userWithAddress = userController.createUserAddress(user.getId(), address);
+
+        Assertions.assertThatCode(() -> userController.createUserAddress(user.getId(), address)).doesNotThrowAnyException();
+        Assertions.assertThat(userWithAddress.getBody()).isNotNull();
+        Assertions.assertThat(userWithAddress.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+    }
+
+    @Test
+    void updateUserAddress() {
+        var user = UserCreator.validUser();
+        var address = AddressCreator.addressRecordUpdateDto();
+
+        ResponseEntity<UserModel> userWithAddress = userController.updateUserAddress(user.getId(), address);
+
+        Assertions.assertThatCode(() -> userController.updateUserAddress(user.getId(), address)).doesNotThrowAnyException();
+        Assertions.assertThat(userWithAddress.getBody()).isNotNull();
+        Assertions.assertThat(userWithAddress.getStatusCode()).isEqualTo(HttpStatus.OK);
+    }
 }
