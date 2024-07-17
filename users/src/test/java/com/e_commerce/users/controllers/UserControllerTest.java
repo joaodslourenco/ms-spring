@@ -136,7 +136,7 @@ class UserControllerTest {
 
     @Test
     @DisplayName("createUserAddress adds address to user when successful")
-    void createUserAddress() {
+    void createUserAddress_AddsAddressToUser_WhenSuccessful() {
         var user = UserCreator.validUser();
         var address = AddressCreator.addressRecordCreateDto();
 
@@ -150,7 +150,7 @@ class UserControllerTest {
 
     @Test
     @DisplayName("updateUserAddress updates address of user when successful")
-    void updateUserAddress() {
+    void updateUserAddress_UpdatesAddressOfUser_WhenSuccessful() {
         var user = UserCreator.validUser();
         var address = AddressCreator.addressRecordUpdateDto();
 

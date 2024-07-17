@@ -1,5 +1,6 @@
 package com.e_commerce.users.util;
 
+import com.e_commerce.users.dtos.AuthenticationLoginDto;
 import com.e_commerce.users.dtos.UserRecordCreateDto;
 import com.e_commerce.users.dtos.UserRecordUpdateDto;
 import com.e_commerce.users.models.UserModel;
@@ -7,6 +8,14 @@ import com.e_commerce.users.models.UserModel;
 import java.util.UUID;
 
 public class UserCreator {
+
+    public static AuthenticationLoginDto authenticationLoginDto() {
+        return AuthenticationLoginDto.builder()
+                .email("email@email.com")
+                .password("senhaSegura")
+                .build();
+    }
+
     public static UserRecordCreateDto userRecordCreateDto() {
         return UserRecordCreateDto.builder()
                 .name("João Silva")
@@ -30,6 +39,7 @@ public class UserCreator {
                 .password("senhaSegura")
                 .build();
     }
+
     public static UserModel validUserWithAddress() {
         return UserModel.builder()
                 .id(UUID.fromString("551ac484-7eac-45c2-b163-5f7bdb8c90f1"))

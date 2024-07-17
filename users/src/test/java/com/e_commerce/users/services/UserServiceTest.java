@@ -116,7 +116,6 @@ class UserServiceTest {
         Assertions.assertThatCode(() -> userService.delete(user.getId())).doesNotThrowAnyException();
 
         verify(userRepositoryMock, Mockito.times(1)).delete(user);
-
     }
 
 
@@ -160,7 +159,7 @@ class UserServiceTest {
 
     @Test
     @DisplayName("createUserAddress adds address to user when successful")
-    void createUserAddress() {
+    void createUserAddress_AddsAddressToUser_WhenSuccessful() {
         var user = UserCreator.validUser();
         var address = AddressCreator.addressRecordCreateDto();
 
@@ -171,7 +170,7 @@ class UserServiceTest {
 
     @Test
     @DisplayName("updateUserAddress updates address of user when successful")
-    void updateUserAddress() {
+    void updateUserAddress_UpdatesAddressOfUser_WhenSuccessful() {
         var user = UserCreator.validUserWithAddress();
         var address = AddressCreator.addressRecordUpdateDto();
 
