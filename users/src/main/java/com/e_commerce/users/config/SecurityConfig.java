@@ -36,7 +36,7 @@ public class SecurityConfig {
                         // Login
                         .requestMatchers(HttpMethod.POST, "/auth/*").permitAll()
                         // User creation
-                        .requestMatchers(HttpMethod.POST, "/users").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/users").permitAll()
                         .requestMatchers("/restricted/*").hasRole("ADMIN")
                         .requestMatchers("/common/*").hasRole(("USER"))
                         .anyRequest().authenticated())
