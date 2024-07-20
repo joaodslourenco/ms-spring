@@ -1,7 +1,7 @@
 package com.e_commerce.users.services;
 
-import com.e_commerce.users.dtos.UserRecordCreateDto;
-import com.e_commerce.users.dtos.UserRecordUpdateDto;
+import com.e_commerce.users.dtos.UserCreateReqDto;
+import com.e_commerce.users.dtos.UserRecordUpdateReqDto;
 import com.e_commerce.users.exceptions.BadRequestException;
 import com.e_commerce.users.mappers.AddressMapper;
 import com.e_commerce.users.mappers.UserMapper;
@@ -62,7 +62,7 @@ class UserServiceTest {
     @Test
     @DisplayName("Save returns user when successful")
     void save() {
-        UserRecordCreateDto newUser = UserCreator.userRecordCreateDto();
+        UserCreateReqDto newUser = UserCreator.userRecordCreateDto();
 
         UserModel savedUser = userService.save(newUser);
 
@@ -73,7 +73,7 @@ class UserServiceTest {
     @Test
     @DisplayName("Save throws BadRequestException if an user with same email already exists")
     void save_ThrowsBadRequest_WhenUserWithSameEmailAlreadyExists() {
-        UserRecordCreateDto newUser = UserCreator.userRecordCreateDto();
+        UserCreateReqDto newUser = UserCreator.userRecordCreateDto();
         UserModel savedUser = userService.save(newUser);
 
         BDDMockito.when(authServiceMock.loadUserByUsername(ArgumentMatchers.anyString()))
@@ -135,13 +135,13 @@ class UserServiceTest {
         UserModel user = UserCreator.validUser();
         UUID userId = user.getId();
 
-        UserRecordUpdateDto userRecordUpdateDto = UserCreator.userRecordUpdateDto();
+        UserRecordUpdateReqDto userRecordUpdateReqDto = UserCreator.userRecordUpdateDto();
         BDDMockito.when(userRepositoryMock.save(ArgumentMatchers.any(UserModel.class))).thenReturn(UserModel.builder().build());
 
-        Assertions.assertThatCode(() -> userService.update(userId, userRecordUpdateDto)).doesNotThrowAnyException();
+        Assertions.assertThatCode(() -> userService.update(userId, userRecordUpdateReqDto)).doesNotThrowAnyException();
 
         verify(userRepositoryMock).findById(userId);
-        verify(userMapperMock).updateUserFromDto(userRecordUpdateDto, user);
+        verify(userMapperMock).updateUserFromDto(userRecordUpdateReqDto, user);
         verify(userRepositoryMock).save(user);
     }
 

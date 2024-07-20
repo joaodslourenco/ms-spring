@@ -1,15 +1,15 @@
 package com.e_commerce.users.util;
 
-import com.e_commerce.users.dtos.AddressRecordCreateDto;
-import com.e_commerce.users.dtos.AddressRecordUpdateDto;
+import com.e_commerce.users.dtos.AddressCreateReqDto;
+import com.e_commerce.users.dtos.AddressUpdateReqDto;
 import com.e_commerce.users.models.AddressModel;
 
 import java.util.UUID;
 
 public class AddressCreator {
 
-    public static AddressRecordCreateDto addressRecordCreateDto() {
-        return AddressRecordCreateDto.builder()
+    public static AddressCreateReqDto addressRecordCreateDto() {
+        return AddressCreateReqDto.builder()
                 .street("Rua 1")
                 .neighbourhood("Bairro")
                 .city("Cidade")
@@ -19,8 +19,8 @@ public class AddressCreator {
                 .build();
     }
 
-    public static AddressRecordUpdateDto addressRecordUpdateDto() {
-        return AddressRecordUpdateDto.builder()
+    public static AddressUpdateReqDto addressRecordUpdateDto() {
+        return AddressUpdateReqDto.builder()
                 .city("Cidade editada")
                 .state("Estado editado")
                 .build();

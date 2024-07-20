@@ -1,8 +1,8 @@
 package com.e_commerce.users.controllers;
 
-import com.e_commerce.users.dtos.AuthenticationLoginDto;
-import com.e_commerce.users.dtos.LoginResponseDto;
-import com.e_commerce.users.dtos.RefreshTokenRequestDto;
+import com.e_commerce.users.dtos.LoginReqDto;
+import com.e_commerce.users.dtos.LoginResDto;
+import com.e_commerce.users.dtos.RefreshTokenReqDto;
 import com.e_commerce.users.enums.ETokenType;
 import com.e_commerce.users.models.UserModel;
 import com.e_commerce.users.services.AuthService;
@@ -23,12 +23,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/auth")
 @RequiredArgsConstructor
 @Tag(name = "Authentication Controller")
-public class AuthenticationController {
+public class AuthController {
     private final AuthenticationManager authenticationManager;
     private final AuthService authService;
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponseDto> login(@RequestBody @Valid AuthenticationLoginDto dto) {
+    public ResponseEntity<LoginResDto> login(@RequestBody @Valid LoginReqDto dto) {
         var usernamePassword = new UsernamePasswordAuthenticationToken(dto.email(), dto.password());
 
         var auth = this.authenticationManager.authenticate(usernamePassword);
@@ -36,11 +36,11 @@ public class AuthenticationController {
         var accessToken = authService.generateToken((UserModel) auth.getPrincipal(), ETokenType.ACCESS);
         var refreshToken = authService.generateToken((UserModel) auth.getPrincipal(), ETokenType.REFRESH);
 
-        return ResponseEntity.ok(LoginResponseDto.builder().accessToken(accessToken).refreshToken(refreshToken).build());
+        return ResponseEntity.ok(LoginResDto.builder().accessToken(accessToken).refreshToken(refreshToken).build());
     }
 
     @PostMapping("/refresh")
-    public ResponseEntity<LoginResponseDto> refreshToken(@RequestBody @Valid RefreshTokenRequestDto dto) {
+    public ResponseEntity<LoginResDto> refreshToken(@RequestBody @Valid RefreshTokenReqDto dto) {
         String login = authService.validateToken(dto.refreshToken(), ETokenType.REFRESH);
 
         UserDetails user = authService.loadUserByUsername(login);
@@ -51,7 +51,7 @@ public class AuthenticationController {
         var accessToken = authService.generateToken((UserModel) auth.getPrincipal(), ETokenType.ACCESS);
         var refreshToken = authService.generateToken((UserModel) auth.getPrincipal(), ETokenType.REFRESH);
 
-        return ResponseEntity.ok(LoginResponseDto.builder().accessToken(accessToken).refreshToken(refreshToken).build());
+        return ResponseEntity.ok(LoginResDto.builder().accessToken(accessToken).refreshToken(refreshToken).build());
     }
 
 

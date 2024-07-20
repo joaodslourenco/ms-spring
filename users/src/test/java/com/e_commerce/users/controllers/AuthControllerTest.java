@@ -1,8 +1,8 @@
 package com.e_commerce.users.controllers;
 
-import com.e_commerce.users.dtos.AuthenticationLoginDto;
-import com.e_commerce.users.dtos.LoginResponseDto;
-import com.e_commerce.users.dtos.RefreshTokenRequestDto;
+import com.e_commerce.users.dtos.LoginReqDto;
+import com.e_commerce.users.dtos.LoginResDto;
+import com.e_commerce.users.dtos.RefreshTokenReqDto;
 import com.e_commerce.users.enums.ETokenType;
 import com.e_commerce.users.models.UserModel;
 import com.e_commerce.users.services.AuthService;
@@ -25,9 +25,9 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)
-class AuthenticationControllerTest {
+class AuthControllerTest {
     @InjectMocks
-    private AuthenticationController authenticationController;
+    private AuthController authController;
 
     @Mock
     private AuthService authServiceMock;
@@ -38,7 +38,7 @@ class AuthenticationControllerTest {
     @Test
     @DisplayName("login returns token response when credentials are valid")
     void login_ReturnsTokenResponse_WhenCredentialsAreValid() {
-        AuthenticationLoginDto authDto = AuthenticationLoginDto.builder().email("email@email.com").password("safepassword").build();
+        LoginReqDto authDto = LoginReqDto.builder().email("email@email.com").password("safepassword").build();
         UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(authDto.email(), authDto.password());
         Authentication auth = mock(Authentication.class);
         UserModel userModel = mock(UserModel.class);
@@ -47,7 +47,7 @@ class AuthenticationControllerTest {
         when(authServiceMock.generateToken(userModel, ETokenType.ACCESS)).thenReturn("access-token");
         when(authServiceMock.generateToken(userModel, ETokenType.REFRESH)).thenReturn("refresh-token");
 
-        ResponseEntity<LoginResponseDto> response = authenticationController.login(authDto);
+        ResponseEntity<LoginResDto> response = authController.login(authDto);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody());
@@ -58,26 +58,26 @@ class AuthenticationControllerTest {
     @Test
     @DisplayName("login throws exception when authentication fails")
     void login_ThrowsException_WhenAuthenticationFails() {
-        AuthenticationLoginDto authDto = AuthenticationLoginDto.builder().email("email@email.com").password("safepassword").build();
+        LoginReqDto authDto = LoginReqDto.builder().email("email@email.com").password("safepassword").build();
         UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(authDto.email(), authDto.password());
         when(authenticationManagerMock.authenticate(usernamePasswordAuthenticationToken)).thenThrow(new BadCredentialsException("Bad credentials"));
 
-        assertThrows(BadCredentialsException.class, () -> authenticationController.login(authDto));
+        assertThrows(BadCredentialsException.class, () -> authController.login(authDto));
     }
 
     @Test
     @DisplayName("refreshToken updates tokens for valid refresh token")
     void refreshToken_UpdatesTokens_ForValidRefreshToken() {
-        RefreshTokenRequestDto refreshTokenRequestDto = RefreshTokenRequestDto.builder().refreshToken("valid-refresh-token").build();
+        RefreshTokenReqDto refreshTokenReqDto = RefreshTokenReqDto.builder().refreshToken("valid-refresh-token").build();
         Authentication auth = mock(Authentication.class);
         UserModel userModel = UserCreator.validUser();
-        when(authServiceMock.validateToken(refreshTokenRequestDto.refreshToken(), ETokenType.REFRESH)).thenReturn("user@example.com");
+        when(authServiceMock.validateToken(refreshTokenReqDto.refreshToken(), ETokenType.REFRESH)).thenReturn("user@example.com");
         when(authServiceMock.loadUserByUsername("user@example.com")).thenReturn(userModel);
         when(authServiceMock.generateToken(userModel, ETokenType.ACCESS)).thenReturn("updated-access-token");
         when(authServiceMock.generateToken(userModel, ETokenType.REFRESH)).thenReturn("updated-refresh-token");
         when(auth.getPrincipal()).thenReturn(userModel);
 
-        ResponseEntity<LoginResponseDto> response = authenticationController.refreshToken(refreshTokenRequestDto);
+        ResponseEntity<LoginResDto> response = authController.refreshToken(refreshTokenReqDto);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody());

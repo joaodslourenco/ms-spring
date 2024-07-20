@@ -3,5 +3,5 @@ package com.e_commerce.users.dtos;
 import lombok.Builder;
 
 @Builder
-public record AuthenticationLoginDto(String email, String password) {
+public record RefreshTokenReqDto(String refreshToken) {
 }

@@ -1,31 +1,31 @@
 package com.e_commerce.users.util;
 
-import com.e_commerce.users.dtos.AuthenticationLoginDto;
-import com.e_commerce.users.dtos.UserRecordCreateDto;
-import com.e_commerce.users.dtos.UserRecordUpdateDto;
+import com.e_commerce.users.dtos.LoginReqDto;
+import com.e_commerce.users.dtos.UserCreateReqDto;
+import com.e_commerce.users.dtos.UserRecordUpdateReqDto;
 import com.e_commerce.users.models.UserModel;
 
 import java.util.UUID;
 
 public class UserCreator {
 
-    public static AuthenticationLoginDto authenticationLoginDto() {
-        return AuthenticationLoginDto.builder()
+    public static LoginReqDto authenticationLoginDto() {
+        return LoginReqDto.builder()
                 .email("email@email.com")
                 .password("senhaSegura")
                 .build();
     }
 
-    public static UserRecordCreateDto userRecordCreateDto() {
-        return UserRecordCreateDto.builder()
+    public static UserCreateReqDto userRecordCreateDto() {
+        return UserCreateReqDto.builder()
                 .name("João Silva")
                 .email("joaosilva@exemplo.com")
                 .password("senhaSegura")
                 .build();
     }
 
-    public static UserRecordUpdateDto userRecordUpdateDto() {
-        return UserRecordUpdateDto.builder()
+    public static UserRecordUpdateReqDto userRecordUpdateDto() {
+        return UserRecordUpdateReqDto.builder()
                 .name("João Editado")
                 .email("emaileditad@teste.com")
                 .build();

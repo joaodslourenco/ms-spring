@@ -1,10 +1,10 @@
 package com.e_commerce.users.controllers;
 
 import com.e_commerce.users.annotations.HasRole;
-import com.e_commerce.users.dtos.AddressRecordCreateDto;
-import com.e_commerce.users.dtos.AddressRecordUpdateDto;
-import com.e_commerce.users.dtos.UserRecordCreateDto;
-import com.e_commerce.users.dtos.UserRecordUpdateDto;
+import com.e_commerce.users.dtos.AddressCreateReqDto;
+import com.e_commerce.users.dtos.AddressUpdateReqDto;
+import com.e_commerce.users.dtos.UserCreateReqDto;
+import com.e_commerce.users.dtos.UserRecordUpdateReqDto;
 import com.e_commerce.users.enums.ERole;
 import com.e_commerce.users.exceptions.details.BadRequestExceptionDetails;
 import com.e_commerce.users.models.UserModel;
@@ -43,8 +43,8 @@ public class UserController {
                             mediaType = MediaType.APPLICATION_JSON_VALUE,
                             schema = @Schema(implementation = BadRequestExceptionDetails.class)))
     })
-    public ResponseEntity<UserModel> save(@RequestBody @Valid UserRecordCreateDto userRecordCreateDto) {
-        return new ResponseEntity<>(userService.save(userRecordCreateDto), HttpStatus.CREATED);
+    public ResponseEntity<UserModel> save(@RequestBody @Valid UserCreateReqDto userCreateReqDto) {
+        return new ResponseEntity<>(userService.save(userCreateReqDto), HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}")
@@ -75,8 +75,8 @@ public class UserController {
                             mediaType = MediaType.APPLICATION_JSON_VALUE,
                             schema = @Schema(implementation = BadRequestExceptionDetails.class)))
     })
-    public ResponseEntity<UserModel> update(@PathVariable UUID id, @RequestBody UserRecordUpdateDto userRecordUpdateDto) {
-        return new ResponseEntity<>(userService.update(id, userRecordUpdateDto), HttpStatus.OK);
+    public ResponseEntity<UserModel> update(@PathVariable UUID id, @RequestBody UserRecordUpdateReqDto userRecordUpdateReqDto) {
+        return new ResponseEntity<>(userService.update(id, userRecordUpdateReqDto), HttpStatus.OK);
     }
 
     @PostMapping("/{id}/address")
@@ -93,9 +93,9 @@ public class UserController {
     })
     public ResponseEntity<UserModel> createUserAddress(
             @PathVariable(name = "id") UUID userId,
-            @RequestBody AddressRecordCreateDto addressRecordCreateDto
+            @RequestBody AddressCreateReqDto addressCreateReqDto
     ) {
-        return new ResponseEntity<>(userService.createUserAddress(userId, addressRecordCreateDto), HttpStatus.OK);
+        return new ResponseEntity<>(userService.createUserAddress(userId, addressCreateReqDto), HttpStatus.OK);
     }
 
     @PatchMapping("/{id}/address")
@@ -112,9 +112,9 @@ public class UserController {
     })
     public ResponseEntity<UserModel> updateUserAddress(
             @PathVariable(name = "id") UUID userId,
-            @RequestBody AddressRecordUpdateDto addressRecordUpdateDto
+            @RequestBody AddressUpdateReqDto addressUpdateReqDto
     ) {
-        return new ResponseEntity<>(userService.updateUserAddress(userId, addressRecordUpdateDto), HttpStatus.OK);
+        return new ResponseEntity<>(userService.updateUserAddress(userId, addressUpdateReqDto), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")

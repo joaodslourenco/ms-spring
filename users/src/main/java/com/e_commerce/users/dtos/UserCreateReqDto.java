@@ -6,7 +6,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 
 @Builder
-public record UserRecordCreateDto(
+public record UserCreateReqDto(
         @NotNull String name,
         @NotNull @Email String email,
         @NotNull String password,

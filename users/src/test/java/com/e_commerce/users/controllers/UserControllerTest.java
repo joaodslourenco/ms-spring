@@ -1,7 +1,7 @@
 package com.e_commerce.users.controllers;
 
-import com.e_commerce.users.dtos.UserRecordCreateDto;
-import com.e_commerce.users.dtos.UserRecordUpdateDto;
+import com.e_commerce.users.dtos.UserCreateReqDto;
+import com.e_commerce.users.dtos.UserRecordUpdateReqDto;
 import com.e_commerce.users.exceptions.BadRequestException;
 import com.e_commerce.users.models.UserModel;
 import com.e_commerce.users.services.UserService;
@@ -42,9 +42,9 @@ class UserControllerTest {
     @Test
     @DisplayName("Save creates user when successful")
     void save_CreatesUser_WhenSuccessful() {
-        UserRecordCreateDto userRecordCreateDto = UserCreator.userRecordCreateDto();
+        UserCreateReqDto userCreateReqDto = UserCreator.userRecordCreateDto();
 
-        ResponseEntity<UserModel> savedUserResponse = userController.save(userRecordCreateDto);
+        ResponseEntity<UserModel> savedUserResponse = userController.save(userCreateReqDto);
 
         Assertions.assertThat(savedUserResponse.getBody()).isNotNull();
         Assertions.assertThat(savedUserResponse.getStatusCode()).isEqualTo(HttpStatus.CREATED);
@@ -53,11 +53,11 @@ class UserControllerTest {
     @Test
     @DisplayName("Save throws BadRequestException if an user with same email or cpf already exists")
     void save_ThrowsBadRequest_WhenUserWithSameEmailOrCpfAlreadyExists() {
-        UserRecordCreateDto userRecordCreateDto = UserCreator.userRecordCreateDto();
+        UserCreateReqDto userCreateReqDto = UserCreator.userRecordCreateDto();
 
-        BDDMockito.when(userServiceMock.save(ArgumentMatchers.any(UserRecordCreateDto.class))).thenThrow(new BadRequestException("User already exists."));
+        BDDMockito.when(userServiceMock.save(ArgumentMatchers.any(UserCreateReqDto.class))).thenThrow(new BadRequestException("User already exists."));
 
-        Assertions.assertThatExceptionOfType(BadRequestException.class).isThrownBy(() -> userController.save(userRecordCreateDto));
+        Assertions.assertThatExceptionOfType(BadRequestException.class).isThrownBy(() -> userController.save(userCreateReqDto));
     }
 
 
@@ -110,11 +110,11 @@ class UserControllerTest {
     void update_ModifierUser_WhenSuccessful() {
         UserModel user = UserCreator.validUser();
 
-        UserRecordUpdateDto userRecordUpdateDto = UserCreator.userRecordUpdateDto();
+        UserRecordUpdateReqDto userRecordUpdateReqDto = UserCreator.userRecordUpdateDto();
 
-        Assertions.assertThatCode(() -> userController.update(user.getId(), userRecordUpdateDto)).doesNotThrowAnyException();
+        Assertions.assertThatCode(() -> userController.update(user.getId(), userRecordUpdateReqDto)).doesNotThrowAnyException();
 
-        ResponseEntity<UserModel> responseEntity = userController.update(user.getId(), userRecordUpdateDto);
+        ResponseEntity<UserModel> responseEntity = userController.update(user.getId(), userRecordUpdateReqDto);
 
         UserModel responseBody = responseEntity.getBody();
 

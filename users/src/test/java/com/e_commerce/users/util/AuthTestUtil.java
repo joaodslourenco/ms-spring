@@ -1,9 +1,9 @@
 package com.e_commerce.users.util;
 
-import com.e_commerce.users.dtos.AuthenticationLoginDto;
-import com.e_commerce.users.dtos.LoginResponseDto;
-import com.e_commerce.users.dtos.UserCreateResponseDto;
-import com.e_commerce.users.dtos.UserRecordCreateDto;
+import com.e_commerce.users.dtos.LoginReqDto;
+import com.e_commerce.users.dtos.LoginResDto;
+import com.e_commerce.users.dtos.UserCreateReqDto;
+import com.e_commerce.users.dtos.UserCreateResDto;
 import com.e_commerce.users.enums.ERole;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.web.client.TestRestTemplate;
@@ -13,38 +13,38 @@ public class AuthTestUtil {
     @Autowired
     private TestRestTemplate testRestTemplate;
 
-    private final UserRecordCreateDto commonUserRecordCreateDto = UserRecordCreateDto.builder()
+    private final UserCreateReqDto commonUserCreateReqDto = UserCreateReqDto.builder()
             .name("Test")
             .role(ERole.USER)
             .email("user@test.com")
             .password("safepassword")
             .build();
 
-    private final AuthenticationLoginDto commonUserLoginDto = AuthenticationLoginDto.builder()
+    private final LoginReqDto commonUserLoginDto = LoginReqDto.builder()
             .email("user@test.com")
             .password("safepassword")
             .build();
 
-    private final UserRecordCreateDto adminUserRecordCreateDto = UserRecordCreateDto.builder()
+    private final UserCreateReqDto adminUserCreateReqDto = UserCreateReqDto.builder()
             .name("Test")
             .role(ERole.ADMIN)
             .email("admin@test.com")
             .password("safepassword")
             .build();
 
-    private final AuthenticationLoginDto adminUserLoginDto = AuthenticationLoginDto.builder()
+    private final LoginReqDto adminUserLoginDto = LoginReqDto.builder()
             .email("admin@test.com")
             .password("safepassword")
             .build();
 
-    private void registerTestUser(ERole role) {
-        UserRecordCreateDto userRecordCreateDto = role.equals(ERole.ADMIN) ? adminUserRecordCreateDto : commonUserRecordCreateDto;
-        testRestTemplate.postForEntity("/users", userRecordCreateDto, UserCreateResponseDto.class);
+    public void registerTestUser(ERole role) {
+        UserCreateReqDto userCreateReqDto = role.equals(ERole.ADMIN) ? adminUserCreateReqDto : commonUserCreateReqDto;
+        testRestTemplate.postForEntity("/users", userCreateReqDto, UserCreateResDto.class);
     }
 
-    private String loginAndGetToken(ERole role) {
-        AuthenticationLoginDto authenticationLoginDto = role.equals(ERole.ADMIN) ? adminUserLoginDto : commonUserLoginDto;
-        ResponseEntity<LoginResponseDto> loginResponse = testRestTemplate.postForEntity("/auth/login", authenticationLoginDto, LoginResponseDto.class);
+    public String loginAndGetToken(ERole role) {
+        LoginReqDto loginReqDto = role.equals(ERole.ADMIN) ? adminUserLoginDto : commonUserLoginDto;
+        ResponseEntity<LoginResDto> loginResponse = testRestTemplate.postForEntity("/auth/login", loginReqDto, LoginResDto.class);
 
         if (loginResponse.getBody() == null) return null;
 

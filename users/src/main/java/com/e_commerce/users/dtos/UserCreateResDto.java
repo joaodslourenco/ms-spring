@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Builder
-public record UserCreateResponseDto(
+public record UserCreateResDto(
         UUID id,
         String name,
         String email,

@@ -1,7 +1,7 @@
 package com.e_commerce.users.mappers;
 
-import com.e_commerce.users.dtos.AddressRecordCreateDto;
-import com.e_commerce.users.dtos.AddressRecordUpdateDto;
+import com.e_commerce.users.dtos.AddressCreateReqDto;
+import com.e_commerce.users.dtos.AddressUpdateReqDto;
 import com.e_commerce.users.models.AddressModel;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
@@ -9,7 +9,7 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
 
 @Mapper(componentModel = "spring", nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 public interface AddressMapper {
-    AddressModel toAddress(AddressRecordCreateDto addressRecordCreateDto);
+    AddressModel toAddress(AddressCreateReqDto addressCreateReqDto);
 
-    void updateAddressFromDto(AddressRecordUpdateDto addressRecordUpdateDto, @MappingTarget AddressModel addressModel);
+    void updateAddressFromDto(AddressUpdateReqDto addressUpdateReqDto, @MappingTarget AddressModel addressModel);
 }

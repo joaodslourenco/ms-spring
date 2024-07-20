@@ -1,9 +1,9 @@
 package com.e_commerce.users.services;
 
-import com.e_commerce.users.dtos.AddressRecordCreateDto;
-import com.e_commerce.users.dtos.AddressRecordUpdateDto;
-import com.e_commerce.users.dtos.UserRecordCreateDto;
-import com.e_commerce.users.dtos.UserRecordUpdateDto;
+import com.e_commerce.users.dtos.AddressCreateReqDto;
+import com.e_commerce.users.dtos.AddressUpdateReqDto;
+import com.e_commerce.users.dtos.UserCreateReqDto;
+import com.e_commerce.users.dtos.UserRecordUpdateReqDto;
 import com.e_commerce.users.exceptions.BadRequestException;
 import com.e_commerce.users.mappers.AddressMapper;
 import com.e_commerce.users.mappers.UserMapper;
@@ -30,18 +30,18 @@ public class UserService {
     private final AddressMapper addressMapper;
 //
 
-    public UserModel save(UserRecordCreateDto userRecordCreateDto) {
-        if (this.authService.loadUserByUsername(userRecordCreateDto.email()) != null) {
+    public UserModel save(UserCreateReqDto userCreateReqDto) {
+        if (this.authService.loadUserByUsername(userCreateReqDto.email()) != null) {
             throw new BadRequestException("User already exists.");
         }
 
-        String encryptedPassword = new BCryptPasswordEncoder().encode(userRecordCreateDto.password());
+        String encryptedPassword = new BCryptPasswordEncoder().encode(userCreateReqDto.password());
 
         UserModel newUser = UserModel.builder()
-                .name(userRecordCreateDto.name())
-                .email(userRecordCreateDto.email())
+                .name(userCreateReqDto.name())
+                .email(userCreateReqDto.email())
                 .password(encryptedPassword)
-                .role(userRecordCreateDto.role())
+                .role(userCreateReqDto.role())
                 .build();
 
         return this.userRepository.save(newUser);
@@ -57,21 +57,21 @@ public class UserService {
         userRepository.delete(user);
     }
 
-    public UserModel update(UUID id, UserRecordUpdateDto userRecordUpdateDto) {
+    public UserModel update(UUID id, UserRecordUpdateReqDto userRecordUpdateReqDto) {
         UserModel savedUser = this.findById(id);
 
-        userMapper.updateUserFromDto(userRecordUpdateDto, savedUser);
+        userMapper.updateUserFromDto(userRecordUpdateReqDto, savedUser);
 
         return userRepository.save(savedUser);
     }
 
     @Transactional
-    public UserModel createUserAddress(UUID userId, AddressRecordCreateDto addressRecordCreateDto) {
+    public UserModel createUserAddress(UUID userId, AddressCreateReqDto addressCreateReqDto) {
         UserModel savedUser = this.findById(userId);
 
         if (savedUser.getAddress() != null) throw new BadRequestException("User already has an address.");
 
-        var newAddress = addressMapper.toAddress(addressRecordCreateDto);
+        var newAddress = addressMapper.toAddress(addressCreateReqDto);
 
         newAddress.setUser(savedUser);
         savedUser.setAddress(newAddress);
@@ -81,11 +81,11 @@ public class UserService {
     }
 
     @Transactional
-    public UserModel updateUserAddress(UUID userId, AddressRecordUpdateDto addressRecordUpdateDto) {
+    public UserModel updateUserAddress(UUID userId, AddressUpdateReqDto addressUpdateReqDto) {
         UserModel savedUser = this.findById(userId);
         AddressModel existingAddress = addressRepository.findById(savedUser.getAddress().getId()).orElseThrow(() -> new BadRequestException("User does not have an address."));
 
-        addressMapper.updateAddressFromDto(addressRecordUpdateDto, existingAddress);
+        addressMapper.updateAddressFromDto(addressUpdateReqDto, existingAddress);
 
         existingAddress.setUser(savedUser);
         savedUser.setAddress(existingAddress);
