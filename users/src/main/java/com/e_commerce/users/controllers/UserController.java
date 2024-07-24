@@ -1,10 +1,11 @@
 package com.e_commerce.users.controllers;
 
 import com.e_commerce.users.annotations.HasRole;
+import com.e_commerce.users.annotations.UserSelfDataAccess;
 import com.e_commerce.users.dtos.AddressCreateReqDto;
 import com.e_commerce.users.dtos.AddressUpdateReqDto;
 import com.e_commerce.users.dtos.UserCreateReqDto;
-import com.e_commerce.users.dtos.UserRecordUpdateReqDto;
+import com.e_commerce.users.dtos.UserUpdateReqDto;
 import com.e_commerce.users.enums.ERole;
 import com.e_commerce.users.exceptions.details.BadRequestExceptionDetails;
 import com.e_commerce.users.models.UserModel;
@@ -49,6 +50,7 @@ public class UserController {
 
     @GetMapping("/{id}")
     @HasRole(ERole.USER)
+    @UserSelfDataAccess
     @Operation(summary = "Finds an User by Id")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Returns the requested user data"),
@@ -65,7 +67,8 @@ public class UserController {
 
     @PatchMapping("/{id}")
     @Operation(summary = "Updates an user")
-    @HasRole(ERole.ADMIN)
+    @HasRole(ERole.USER)
+    @UserSelfDataAccess
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "User updated successfully"),
             @ApiResponse(
@@ -75,13 +78,14 @@ public class UserController {
                             mediaType = MediaType.APPLICATION_JSON_VALUE,
                             schema = @Schema(implementation = BadRequestExceptionDetails.class)))
     })
-    public ResponseEntity<UserModel> update(@PathVariable UUID id, @RequestBody UserRecordUpdateReqDto userRecordUpdateReqDto) {
-        return new ResponseEntity<>(userService.update(id, userRecordUpdateReqDto), HttpStatus.OK);
+    public ResponseEntity<UserModel> update(@PathVariable UUID id, @RequestBody UserUpdateReqDto userUpdateReqDto) {
+        return new ResponseEntity<>(userService.update(id, userUpdateReqDto), HttpStatus.OK);
     }
 
     @PostMapping("/{id}/address")
     @Operation(summary = "Adds address to an user if not existent")
-    @HasRole(ERole.ADMIN)
+    @HasRole(ERole.USER)
+    @UserSelfDataAccess
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Address added to user successfully"),
             @ApiResponse(
@@ -93,14 +97,15 @@ public class UserController {
     })
     public ResponseEntity<UserModel> createUserAddress(
             @PathVariable(name = "id") UUID userId,
-            @RequestBody AddressCreateReqDto addressCreateReqDto
+            @RequestBody @Valid AddressCreateReqDto addressCreateReqDto
     ) {
         return new ResponseEntity<>(userService.createUserAddress(userId, addressCreateReqDto), HttpStatus.OK);
     }
 
     @PatchMapping("/{id}/address")
     @Operation(summary = "Updates an existing user's address ")
-    @HasRole(ERole.ADMIN)
+    @HasRole(ERole.USER)
+    @UserSelfDataAccess
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "User updated successfully"),
             @ApiResponse(
@@ -118,7 +123,8 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}")
-    @HasRole(ERole.ADMIN)
+    @HasRole(ERole.USER)
+    @UserSelfDataAccess
     @Operation(summary = "Deletes an user")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "User deleted successfully"),
