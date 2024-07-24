@@ -2,7 +2,9 @@ package com.e_commerce.users.handlers;
 
 import com.e_commerce.users.exceptions.BadRequestException;
 
+import com.e_commerce.users.exceptions.IllegalAccessException;
 import com.e_commerce.users.exceptions.details.BadRequestExceptionDetails;
+import com.e_commerce.users.exceptions.details.IllegalAccessExceptionDetails;
 import com.e_commerce.users.exceptions.details.MethodArgumentNotValidExceptionDetails;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -33,6 +35,18 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
                         .build(), HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(IllegalAccessException.class)
+    public ResponseEntity<IllegalAccessExceptionDetails> handlerIllegalAccessException(IllegalAccessException bre) {
+        return new ResponseEntity<>(
+                IllegalAccessExceptionDetails
+                        .builder()
+                        .title(HttpStatus.FORBIDDEN.getReasonPhrase())
+                        .details(bre.getMessage())
+                        .status(HttpStatus.FORBIDDEN.value())
+                        .timestamp(LocalDateTime.now())
+                        .build(), HttpStatus.FORBIDDEN);
+    }
+
 
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
@@ -45,7 +59,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
         MethodArgumentNotValidExceptionDetails errorDetails = MethodArgumentNotValidExceptionDetails.builder()
                 .title("Validation Failed")
-                .details("Um ou mais campos estão inválidos")
+                .details("One or more fields are invalid.")
                 .status(HttpStatus.BAD_REQUEST.value())
                 .timestamp(LocalDateTime.now())
                 .errors(errors)
