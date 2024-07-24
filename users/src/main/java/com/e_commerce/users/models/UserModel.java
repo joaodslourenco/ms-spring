@@ -1,9 +1,9 @@
 package com.e_commerce.users.models;
 
 import com.e_commerce.users.enums.ERole;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -52,7 +52,8 @@ public class UserModel implements Serializable, UserDetails {
     }
 
     @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    public Collection<SimpleGrantedAuthority> getAuthorities() {
         if (this.role == ERole.ADMIN) {
             return List.of(new SimpleGrantedAuthority("ROLE_ADMIN"), new SimpleGrantedAuthority("ROLE_USER"));
         }
