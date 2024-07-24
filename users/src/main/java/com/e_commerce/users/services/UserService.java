@@ -3,7 +3,7 @@ package com.e_commerce.users.services;
 import com.e_commerce.users.dtos.AddressCreateReqDto;
 import com.e_commerce.users.dtos.AddressUpdateReqDto;
 import com.e_commerce.users.dtos.UserCreateReqDto;
-import com.e_commerce.users.dtos.UserRecordUpdateReqDto;
+import com.e_commerce.users.dtos.UserUpdateReqDto;
 import com.e_commerce.users.exceptions.BadRequestException;
 import com.e_commerce.users.mappers.AddressMapper;
 import com.e_commerce.users.mappers.UserMapper;
@@ -57,10 +57,10 @@ public class UserService {
         userRepository.delete(user);
     }
 
-    public UserModel update(UUID id, UserRecordUpdateReqDto userRecordUpdateReqDto) {
+    public UserModel update(UUID id, UserUpdateReqDto userUpdateReqDto) {
         UserModel savedUser = this.findById(id);
 
-        userMapper.updateUserFromDto(userRecordUpdateReqDto, savedUser);
+        userMapper.updateUserFromDto(userUpdateReqDto, savedUser);
 
         return userRepository.save(savedUser);
     }

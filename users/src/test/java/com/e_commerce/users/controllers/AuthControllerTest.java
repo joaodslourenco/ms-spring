@@ -70,7 +70,7 @@ class AuthControllerTest {
     void refreshToken_UpdatesTokens_ForValidRefreshToken() {
         RefreshTokenReqDto refreshTokenReqDto = RefreshTokenReqDto.builder().refreshToken("valid-refresh-token").build();
         Authentication auth = mock(Authentication.class);
-        UserModel userModel = UserCreator.validUser();
+        UserModel userModel = UserCreator.validUser;
         when(authServiceMock.validateToken(refreshTokenReqDto.refreshToken(), ETokenType.REFRESH)).thenReturn("user@example.com");
         when(authServiceMock.loadUserByUsername("user@example.com")).thenReturn(userModel);
         when(authServiceMock.generateToken(userModel, ETokenType.ACCESS)).thenReturn("updated-access-token");
