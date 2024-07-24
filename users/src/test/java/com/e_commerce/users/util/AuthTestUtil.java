@@ -7,43 +7,21 @@ import com.e_commerce.users.dtos.UserCreateResDto;
 import com.e_commerce.users.enums.ERole;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 
 public class AuthTestUtil {
     @Autowired
     private TestRestTemplate testRestTemplate;
 
-    private final UserCreateReqDto commonUserCreateReqDto = UserCreateReqDto.builder()
-            .name("Test")
-            .role(ERole.USER)
-            .email("user@test.com")
-            .password("safepassword")
-            .build();
-
-    private final LoginReqDto commonUserLoginDto = LoginReqDto.builder()
-            .email("user@test.com")
-            .password("safepassword")
-            .build();
-
-    private final UserCreateReqDto adminUserCreateReqDto = UserCreateReqDto.builder()
-            .name("Test")
-            .role(ERole.ADMIN)
-            .email("admin@test.com")
-            .password("safepassword")
-            .build();
-
-    private final LoginReqDto adminUserLoginDto = LoginReqDto.builder()
-            .email("admin@test.com")
-            .password("safepassword")
-            .build();
-
     public void registerTestUser(ERole role) {
-        UserCreateReqDto userCreateReqDto = role.equals(ERole.ADMIN) ? adminUserCreateReqDto : commonUserCreateReqDto;
+        UserCreateReqDto userCreateReqDto = role.equals(ERole.ADMIN) ? UserCreator.adminUserCreateReqDto : UserCreator.commonUserCreateReqDto;
         testRestTemplate.postForEntity("/users", userCreateReqDto, UserCreateResDto.class);
     }
 
     public String loginAndGetToken(ERole role) {
-        LoginReqDto loginReqDto = role.equals(ERole.ADMIN) ? adminUserLoginDto : commonUserLoginDto;
+        LoginReqDto loginReqDto = role.equals(ERole.ADMIN) ? UserCreator.adminUserLoginReqDto : UserCreator.commonUserLoginReqDto;
         ResponseEntity<LoginResDto> loginResponse = testRestTemplate.postForEntity("/auth/login", loginReqDto, LoginResDto.class);
 
         if (loginResponse.getBody() == null) return null;
@@ -56,4 +34,13 @@ public class AuthTestUtil {
         this.registerTestUser(role);
         return this.loginAndGetToken(role);
     }
+
+    public HttpHeaders getHeaders(String token, boolean isJson) {
+        HttpHeaders headers = new HttpHeaders();
+        if (isJson) headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.setBearerAuth(token);
+        return headers;
+    }
+
+
 }
