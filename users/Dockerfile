@@ -7,15 +7,17 @@ FROM amazoncorretto:21
 RUN mkdir /app
 WORKDIR /app
 
-COPY target/*.jar /app/app.jar
+# RUN mvn clean package
 
-# Crie um usuário e grupo para rodar a aplicação
-RUN groupadd -g 1000 appgroup && \
-    useradd -r -u 1000 -g appgroup appuser && \
-    chown -R appuser:appgroup /app
+COPY ./target/*.jar /app/app.jar
+
+# # Crie um usuário e grupo para rodar a aplicação
+# RUN groupadd -g 1000 appgroup && \
+#     useradd -r -u 1000 -g appgroup appuser && \
+#     chown -R appuser:appgroup /app
 
 # Mude para o usuário criado
-USER appuser
+# USER appuser
 
 # Comando para iniciar a aplicação
 CMD ["java", "-jar", "/app/app.jar"]
