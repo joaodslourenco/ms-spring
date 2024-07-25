@@ -8,6 +8,7 @@ import com.e_commerce.users.dtos.UserCreateReqDto;
 import com.e_commerce.users.dtos.UserUpdateReqDto;
 import com.e_commerce.users.enums.ERole;
 import com.e_commerce.users.exceptions.details.BadRequestExceptionDetails;
+import com.e_commerce.users.exceptions.details.IllegalAccessExceptionDetails;
 import com.e_commerce.users.models.UserModel;
 import com.e_commerce.users.services.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -59,7 +60,13 @@ public class UserController {
                     description = "The requested ID was not found",
                     content = @Content(
                             mediaType = MediaType.APPLICATION_JSON_VALUE,
-                            schema = @Schema(implementation = BadRequestExceptionDetails.class)))
+                            schema = @Schema(implementation = BadRequestExceptionDetails.class))),
+            @ApiResponse(
+                    responseCode = "403",
+                    description = "The requested ID is not the same as the same as the user's logged in. Users can manage only their own data",
+                    content = @Content(
+                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = IllegalAccessExceptionDetails.class)))
     })
     public ResponseEntity<UserModel> findById(@PathVariable @Parameter(description = "User ID to search for", required = true) UUID id) {
         return new ResponseEntity<>(userService.findById(id), HttpStatus.OK);
@@ -76,7 +83,13 @@ public class UserController {
                     description = "The requested ID was not found",
                     content = @Content(
                             mediaType = MediaType.APPLICATION_JSON_VALUE,
-                            schema = @Schema(implementation = BadRequestExceptionDetails.class)))
+                            schema = @Schema(implementation = BadRequestExceptionDetails.class))),
+            @ApiResponse(
+                    responseCode = "403",
+                    description = "The requested ID is not the same as the user's logged in. Users can manage only their own data",
+                    content = @Content(
+                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = IllegalAccessExceptionDetails.class)))
     })
     public ResponseEntity<UserModel> update(@PathVariable UUID id, @RequestBody UserUpdateReqDto userUpdateReqDto) {
         return new ResponseEntity<>(userService.update(id, userUpdateReqDto), HttpStatus.OK);
@@ -93,7 +106,13 @@ public class UserController {
                     description = "The requested ID was not found",
                     content = @Content(
                             mediaType = MediaType.APPLICATION_JSON_VALUE,
-                            schema = @Schema(implementation = BadRequestExceptionDetails.class)))
+                            schema = @Schema(implementation = BadRequestExceptionDetails.class))),
+            @ApiResponse(
+                    responseCode = "403",
+                    description = "The requested ID is not the same as the user's logged in. Users can manage only their own data",
+                    content = @Content(
+                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = IllegalAccessExceptionDetails.class)))
     })
     public ResponseEntity<UserModel> createUserAddress(
             @PathVariable(name = "id") UUID userId,
@@ -103,7 +122,7 @@ public class UserController {
     }
 
     @PatchMapping("/{id}/address")
-    @Operation(summary = "Updates an existing user's address ")
+    @Operation(summary = "Updates an existing same as the user's logged in address ")
     @HasRole(ERole.USER)
     @UserSelfDataAccess
     @ApiResponses(value = {
@@ -113,7 +132,13 @@ public class UserController {
                     description = "The requested ID was not found",
                     content = @Content(
                             mediaType = MediaType.APPLICATION_JSON_VALUE,
-                            schema = @Schema(implementation = BadRequestExceptionDetails.class)))
+                            schema = @Schema(implementation = BadRequestExceptionDetails.class))),
+            @ApiResponse(
+                    responseCode = "403",
+                    description = "The requested ID is not the same as the user's logged in. Users can manage only their own data",
+                    content = @Content(
+                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = IllegalAccessExceptionDetails.class)))
     })
     public ResponseEntity<UserModel> updateUserAddress(
             @PathVariable(name = "id") UUID userId,
@@ -133,7 +158,13 @@ public class UserController {
                     description = "The requested ID was not found",
                     content = @Content(
                             mediaType = MediaType.APPLICATION_JSON_VALUE,
-                            schema = @Schema(implementation = BadRequestExceptionDetails.class)))
+                            schema = @Schema(implementation = BadRequestExceptionDetails.class))),
+            @ApiResponse(
+                    responseCode = "403",
+                    description = "The requested ID is not the same as the user's logged in. Users can manage only their own data",
+                    content = @Content(
+                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = IllegalAccessExceptionDetails.class)))
     })
     public ResponseEntity<Void> delete(@PathVariable UUID id) {
         userService.delete(id);
