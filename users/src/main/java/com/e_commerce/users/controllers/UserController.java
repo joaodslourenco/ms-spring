@@ -2,10 +2,7 @@ package com.e_commerce.users.controllers;
 
 import com.e_commerce.users.annotations.HasRole;
 import com.e_commerce.users.annotations.UserSelfDataAccess;
-import com.e_commerce.users.dtos.AddressCreateReqDto;
-import com.e_commerce.users.dtos.AddressUpdateReqDto;
-import com.e_commerce.users.dtos.UserCreateReqDto;
-import com.e_commerce.users.dtos.UserUpdateReqDto;
+import com.e_commerce.users.dtos.*;
 import com.e_commerce.users.enums.ERole;
 import com.e_commerce.users.exceptions.details.BadRequestExceptionDetails;
 import com.e_commerce.users.exceptions.details.IllegalAccessExceptionDetails;
@@ -52,8 +49,8 @@ public class UserController {
         var response = userService.save(userCreateReqDto);
 
         if (response != null) {
-            log.info("Sending message to Kafka topic new-user with email: {}", response.getEmail());
-            kafkaTemplate.send("new-user", "email", response.getEmail());
+            var emailDto = new EmailDto(response.getName(), response.getEmail());
+            kafkaTemplate.send("new-user", emailDto.toString());
         }
 
         return new ResponseEntity<>(response, HttpStatus.CREATED);
