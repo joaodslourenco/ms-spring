@@ -22,6 +22,7 @@ services:
     environment:
       POSTGRES_USER: root
       POSTGRES_PASSWORD: root
+      POSTGRES_DB: users
   kafka:
     image: confluentinc/cp-kafka:7.4.0
     container_name: "kafka"

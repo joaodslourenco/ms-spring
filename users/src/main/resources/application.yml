@@ -1,12 +1,18 @@
 spring:
   datasource:
-    url: jdbc:postgresql://db:5432/users
+    url: jdbc:postgresql://localhost:5432/users
     username: root
     password: root
   jpa:
     hibernate:
       ddl-auto: update
     show-sql: true
+  kafka:
+    bootstrap-servers: localhost:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+
 api:
   security:
     access-token:

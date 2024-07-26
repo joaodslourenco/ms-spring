@@ -20,9 +20,11 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -31,22 +33,30 @@ import java.util.UUID;
 @RequestMapping("/users")
 @RequiredArgsConstructor
 @Tag(name = "User Controller", description = "Endpoints for user management")
+@Log4j2
 public class UserController {
     private final UserService userService;
+    private final KafkaTemplate<String, String> kafkaTemplate;
 
     @PostMapping
     @Operation(summary = "Creates a new user")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "User created successfully"),
-            @ApiResponse(
-                    responseCode = "400",
-                    description = "User already exists",
+            @ApiResponse(responseCode = "400", description = "User already exists",
                     content = @Content(
                             mediaType = MediaType.APPLICATION_JSON_VALUE,
-                            schema = @Schema(implementation = BadRequestExceptionDetails.class)))
+                            schema = @Schema(implementation = BadRequestExceptionDetails.class))
+            )
     })
     public ResponseEntity<UserModel> save(@RequestBody @Valid UserCreateReqDto userCreateReqDto) {
-        return new ResponseEntity<>(userService.save(userCreateReqDto), HttpStatus.CREATED);
+        var response = userService.save(userCreateReqDto);
+
+        if (response != null) {
+            log.info("Sending message to Kafka topic new-user with email: {}", response.getEmail());
+            kafkaTemplate.send("new-user", "email", response.getEmail());
+        }
+
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}")
