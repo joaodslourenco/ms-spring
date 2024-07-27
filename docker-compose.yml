@@ -1,16 +1,17 @@
 services:
-  app:
-    container_name: "users-app"
-    build: ./users
-    ports:
-      - '8080:8080'
-    environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/users
-      SPRING_DATASOURCE_USERNAME: root
-      SPRING_DATASOURCE_PASSWORD: root
-    depends_on:
-      - db
-  db:
+#  users:
+#    container_name: "users-service"
+#    build: ./users
+#    ports:
+#      - '8080:8080'
+#    environment:
+#      SPRING_DATASOURCE_URL: jdbc:postgresql://users-db:5432/users
+#      SPRING_DATASOURCE_USERNAME: root
+#      SPRING_DATASOURCE_PASSWORD: root
+#    depends_on:
+#      - users-db
+
+  users-db:
     image: postgres:latest
     container_name: "users-db"
     restart: always
@@ -23,6 +24,33 @@ services:
       POSTGRES_USER: root
       POSTGRES_PASSWORD: root
       POSTGRES_DB: users
+
+#  notifications:
+#    container_name: "notifications-service"
+#    build: ./notifications
+#    ports:
+#      - '8081:8081'
+#    environment:
+#      SPRING_DATASOURCE_URL: jdbc:postgresql://notifications-db:5432/notifications
+#      SPRING_DATASOURCE_USERNAME: root
+#      SPRING_DATASOURCE_PASSWORD: root
+#    depends_on:
+#      - notifications-db
+
+  notifications-db:
+    image: postgres:latest
+    container_name: "notifications-db"
+    restart: always
+    tty: true
+    ports:
+      - '5433:5432'
+    volumes:
+      - ./notifications/.docker/dbdata:/var/lib/postgres/data
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: notifications
+
   kafka:
     image: confluentinc/cp-kafka:7.4.0
     container_name: "kafka"
@@ -46,5 +74,5 @@ services:
     ports:
       - '2181:2181'
     environment:
-        ZOOKEEPER_CLIENT_PORT: 2181
-        ZOOKEEPER_TICK_TIME: 2000
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000

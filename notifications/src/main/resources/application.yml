@@ -1,6 +1,27 @@
+server:
+  port: 8081
 spring:
   application:
     name: notifications
+  datasource:
+    url: jdbc:postgresql://localhost:5433/notifications
+    username: root
+    password: root
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: joaudevelopment@gmail.com
+    password: ${MAIL_PASSWORD:byak bvho qpgm buez}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
   kafka:
     bootstrap-servers: localhost:9092
     consumer:
@@ -8,5 +29,4 @@ spring:
         key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
         value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
         auto-offset-reset: earliest
-server:
-  port: 8081
+

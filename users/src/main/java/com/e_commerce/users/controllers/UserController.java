@@ -50,6 +50,7 @@ public class UserController {
 
         if (response != null) {
             var emailDto = new EmailDto(response.getName(), response.getEmail());
+
             kafkaTemplate.send("new-user", emailDto.toString());
         }
 
