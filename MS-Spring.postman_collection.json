@@ -1,0 +1,354 @@
+{
+	"info": {
+		"_postman_id": "1bdbf7a7-175d-49f8-9f09-561e9ea22843",
+		"name": "MS-Spring",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "21924039"
+	},
+	"item": [
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var res = pm.response.json();\r",
+									"if (res.accessToken) {\r",
+									"    pm.environment.set('token', res.accessToken);\r",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"joaouser@admin.com\",\r\n    \"password\": \"12345678\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/login",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Refresh Token",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"refreshToken\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJ1c2Vycy1hcGkiLCJzdWIiOiJqb2FvQGFkbWluLmNvbSIsImV4cCI6MTcyMDk0OTE1M30.BKoNZEeOmMldpVoB5HclQi3tg6N6c1RyfzZG29LzpYA\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/refresh",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"refresh"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "Create Users",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Joãozinho com Docker\",\r\n    \"email\": \"joaodslourenco@gmail.com\",\r\n    \"password\": \"12345678\",\r\n    \"role\": \"USER\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/users",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create User Address",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"street\": \"Rua das Orquídeas, 123\"\r\n    // \"neighbourhood\": \"Jardim das Palmeiras\",\r\n    // \"city\": \"Santarém\",\r\n    // \"state\": \"PA\",\r\n    // \"zipCode\": \"68020650\",\r\n    // \"country\": \"Brasil\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/users/bbef39a7-589e-4b69-ad2a-f7a2e0d0617f/address",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"users",
+								"bbef39a7-589e-4b69-ad2a-f7a2e0d0617f",
+								"address"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"João\",\r\n    \"email\": \"joau@gmail.com\",\r\n    \"password\": \"12345678\",\r\n    \"cpf\": \"298755462\",\r\n    \"phone\": \"999048927\",\r\n    \"address\": {\r\n        \"id\": \"54ccb32c-dede-4dba-a37a-a56a74eccaec\",\r\n        \"street\": \"Rua das Flores, 123\",\r\n        \"neighbourhood\": \"Jardim das Palmeiras\",\r\n        \"city\": \"Santarém\",\r\n        \"state\": \"PA\",\r\n        \"zipCode\": \"68020650\",\r\n        \"country\": \"Brasil\"\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/users/bb93c020-b1c0-425c-b632-40e87b65df3f",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"users",
+								"bb93c020-b1c0-425c-b632-40e87b65df3f"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update User Address",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    // \"street\": \"Rua das Flores Editadas, 1234\",\r\n    // \"neighbourhood\": \"Jardim das Flores também\"\r\n    // \"city\": \"Santarém\",\r\n    // \"state\": \"PA\",\r\n    // \"zipCode\": \"68020650\"\r\n    \"country\": \"Brazuca Baby\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/users/bbef39a7-589e-4b69-ad2a-f7a2e0d0617f/address",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"users",
+								"bbef39a7-589e-4b69-ad2a-f7a2e0d0617f",
+								"address"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Find By Id",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "f6ccea4c-5d5c-413e-95d5-1308696985dd",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "user",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/users/8f8de5ad-a17a-49ea-9c0b-0eaca3c178b2",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"users",
+								"8f8de5ad-a17a-49ea-9c0b-0eaca3c178b2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Common Ping",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/common/ping",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"common",
+								"ping"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Restricted Ping",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/restricted/ping",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"restricted",
+								"ping"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/users/d39edb98-b380-45fb-8ffd-ec42aba18c1b",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"users",
+								"d39edb98-b380-45fb-8ffd-ec42aba18c1b"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
