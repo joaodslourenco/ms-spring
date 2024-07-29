@@ -4,7 +4,7 @@ spring:
   application:
     name: notifications
   datasource:
-    url: jdbc:postgresql://localhost:5433/notifications
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5433/notifications}
     username: root
     password: root
   jpa:
@@ -23,7 +23,7 @@ spring:
           starttls:
             enable: true
   kafka:
-    bootstrap-servers: localhost:9092
+    bootstrap-servers: ${SPRING_KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
     consumer:
         group-id: users-group
         key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
