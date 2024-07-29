@@ -1,0 +1,32 @@
+server:
+  port: 8080
+spring:
+  application:
+    name: api_gateway
+#  cloud:
+#    gateway:
+#      routes:
+#        - id: users-service
+#          uri: http://users-service:8081
+#          predicates:
+#            - Path=/users/**
+##            - Path=/auth/**
+##            - Path=/auth/login
+##            - Path=/common/**
+##            - Path=/restricted/**
+##            - Path=/swagger-ui/**
+#        - id: notifications-service
+#          uri: http://notifications-service:8082
+#          predicates:
+#            - Path=/notifications/**
+
+services:
+    users:
+        uri: http://users-service:8081
+logging:
+  level:
+    org:
+      springframework:
+        cloud:
+          gateway: DEBUG
+        web: DEBUG
