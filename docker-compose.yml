@@ -1,9 +1,20 @@
 services:
+  api-gateway:
+    container_name: "api-gateway"
+    build: ./api_gateway
+    ports:
+      - '8080:8080'
+    depends_on:
+      - users
+      - notifications
+    environment:
+      SPRING_APPLICATION_NAME: api-gateway
+
   users:
     container_name: "users-service"
     build: ./users
     ports:
-      - '8080:8080'
+      - '8081:8081'
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://users-db:5432/users
       SPRING_DATASOURCE_USERNAME: root
@@ -31,7 +42,7 @@ services:
     container_name: "notifications-service"
     build: ./notifications
     ports:
-      - '8081:8081'
+      - '8082:8082'
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://notifications-db:5432/notifications
       SPRING_DATASOURCE_USERNAME: root
@@ -66,10 +77,9 @@ services:
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-#      KAFKA_ADVERTISED_LISTENERS: kafka:9092
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT
-#      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT_INTERNAL://kafka:29092,PLAINTEXT_EXTERNAL://localhost:9092
+#      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT_INTERNAL://kafka:9092,PLAINTEXT_EXTERNAL://localhost:29092
 #      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT_INTERNAL:PLAINTEXT,PLAINTEXT_EXTERNAL:PLAINTEXT
 #      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT_INTERNAL
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1

@@ -1,4 +1,8 @@
+server:
+  port: 8081
 spring:
+  application:
+    name: users
   datasource:
     url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/users}
     username: root
