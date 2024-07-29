@@ -4,7 +4,7 @@ Welcome to MS-Spring repository! This project is a demo of a microservices archi
 ## Overview
 This project was developed with the objective of exploring and demonstrating microservices architecture applying the best practices of the Spring ecosystem. It includes several services that communicate with each other to offer a complete solution for an e-commerce system.
 
-![image](https://github.com/user-attachments/assets/f71da80d-0bb2-4fcc-86fd-b6c11691bf35)
+![image](https://github.com/user-attachments/assets/d774e94d-5776-4e7d-a5d9-6747909a5249)
 
 
 Important! This is a work-in-progress project and will be soon having more functionalities! :)
@@ -13,6 +13,7 @@ Important! This is a work-in-progress project and will be soon having more funct
 - Java 21
 - Spring Boot 3
 - Spring Security
+- Spring Cloud Gateway
 - Spring Data JPA
 - PostgreSQL
 - Kafka
@@ -20,6 +21,7 @@ Important! This is a work-in-progress project and will be soon having more funct
 - Swagger
 - Hibernate
 - JUnit 5
+- Mockito
 - H2 Database (for tests)
 - Maven
 
@@ -28,6 +30,7 @@ Currently, the project has the following structure:
 
 - user-service: Service responsible for users management.
 - notifications-service: Service responsible for sending notifications to users.
+- api-gateway: Service responsible for managing routing of the app.
 - kafka-service: Service responsible for handling async communication between services through messaging.
 - zookeeper-service: Service responsible for managing Kafka clusters.
 
