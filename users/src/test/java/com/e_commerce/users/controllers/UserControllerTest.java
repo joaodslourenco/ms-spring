@@ -18,6 +18,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.UUID;
@@ -30,8 +31,12 @@ class UserControllerTest {
     @Mock
     private UserService userServiceMock;
 
+    @Mock
+    private KafkaTemplate<String,String> kafkaTemplateMock;
+
     @BeforeEach
     void setup() {
+        BDDMockito.when(kafkaTemplateMock.send(ArgumentMatchers.anyString(), ArgumentMatchers.anyString())).thenReturn(null);
         BDDMockito.when(userServiceMock.save(UserCreator.commonUserCreateReqDto)).thenReturn(UserCreator.validUser);
         BDDMockito.when(userServiceMock.findById(ArgumentMatchers.any(UUID.class))).thenReturn(UserCreator.validUser);
         BDDMockito.when(userServiceMock.update(UserCreator.validUser.getId(), UserCreator.userUpdateReqDto)).thenReturn(UserCreator.validUser);
