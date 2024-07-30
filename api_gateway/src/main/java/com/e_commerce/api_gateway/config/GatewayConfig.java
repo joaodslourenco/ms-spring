@@ -15,7 +15,7 @@ public class GatewayConfig {
     @Bean
     public RouteLocator customRouteLocator(RouteLocatorBuilder builder) {
         return builder.routes()
-                .route("users_service", r -> r.path("/users/**", "/auth/**", "/swagger-ui/**", "/common/**", "/restricted/**")
+                .route("users_service", r -> r.path("/users/**", "/auth/**", "/swagger-ui/**", "/v3/api-docs/**", "/common/**", "/restricted/**")
                         .uri(USERS_SERVICE))
                 .build();
     }
