@@ -55,6 +55,7 @@ docker compose up -d
 
 3 - Access the app through 'http://localhost:8080'
 
+4 - Use 'http://localhost:8080/swagger-ui' or the Postman collection to check the available endpoints.
 
 ## Tests
 This project has unit and integration tests. To run them, run:
