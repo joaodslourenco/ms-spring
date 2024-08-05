@@ -4,11 +4,11 @@ services:
     build: ./api_gateway
     ports:
       - '8080:8080'
+    environment:
+      SPRING_APPLICATION_NAME: api-gateway
     depends_on:
       - users
       - notifications
-    environment:
-      SPRING_APPLICATION_NAME: api-gateway
 
   users:
     container_name: "users-service"
@@ -31,12 +31,12 @@ services:
     tty: true
     ports:
       - '5432:5432'
-    volumes:
-      - ./users/.docker/dbdata:/var/lib/postgres/data
     environment:
       POSTGRES_USER: root
       POSTGRES_PASSWORD: root
       POSTGRES_DB: users
+    volumes:
+      - ./users/.docker/dbdata:/var/lib/postgres/data
 
   notifications:
     container_name: "notifications-service"
@@ -59,12 +59,40 @@ services:
     tty: true
     ports:
       - '5433:5432'
-    volumes:
-      - ./notifications/.docker/dbdata:/var/lib/postgres/data
     environment:
       POSTGRES_USER: root
       POSTGRES_PASSWORD: root
       POSTGRES_DB: notifications
+    volumes:
+      - ./notifications/.docker/dbdata:/var/lib/postgres/data
+
+  products:
+    container_name: "products-service"
+    build: ./products
+    ports:
+      - '8083:8083'
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://products-db:5432/products
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+    depends_on:
+      - products-db
+      - kafka
+
+  products-db:
+    image: postgres:latest
+    container_name: "products-db"
+    restart: always
+    tty: true
+    ports:
+      - '5434:5432'
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: products
+    volumes:
+      - ./products/.docker/dbdata:/var/lib/postgres/data
 
   kafka:
     image: confluentinc/cp-kafka:7.4.0
