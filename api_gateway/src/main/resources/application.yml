@@ -21,8 +21,11 @@ spring:
 #            - Path=/notifications/**
 
 services:
-    users:
-        uri: http://users-service:8081
+  users:
+    uri: http://users-service:8081
+  products:
+    uri: http://products-service:8083
+
 logging:
   level:
     org:

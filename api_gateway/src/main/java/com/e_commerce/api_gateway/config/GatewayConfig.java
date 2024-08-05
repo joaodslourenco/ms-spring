@@ -12,11 +12,16 @@ public class GatewayConfig {
     @Value("${services.users.uri}")
     private String USERS_SERVICE;
 
+    @Value("${services.products.uri}")
+    private String PRODUCTS_SERVICE;
+
     @Bean
     public RouteLocator customRouteLocator(RouteLocatorBuilder builder) {
         return builder.routes()
                 .route("users_service", r -> r.path("/users/**", "/auth/**", "/swagger-ui/**", "/v3/api-docs/**", "/common/**", "/restricted/**")
                         .uri(USERS_SERVICE))
+                .route("products_service", r -> r.path("/products/**")
+                        .uri(PRODUCTS_SERVICE))
                 .build();
     }
 
