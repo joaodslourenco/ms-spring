@@ -19,6 +19,12 @@ public class CategoryService {
     private final CategoryMapper categoryMapper;
 
     public CategoryModel save(CategoryCreateReqDto categoryCreateReqDto) {
+        var existingCategory = categoryRepository.findByNameCaseInsensitive(categoryCreateReqDto.name());
+
+        if (existingCategory != null) {
+            throw new RuntimeException("Category already exists");
+        }
+
         var newCategory = categoryMapper.toCategoryModel(categoryCreateReqDto);
 
         return categoryRepository.save(newCategory);
