@@ -1,6 +1,7 @@
 package com.e_commerce.products.controllers;
 
 import com.e_commerce.products.dtos.CategoryCreateReqDto;
+import com.e_commerce.products.dtos.CategoryUpdateReqDto;
 import com.e_commerce.products.models.CategoryModel;
 import com.e_commerce.products.services.CategoryService;
 import jakarta.validation.Valid;
@@ -29,5 +30,17 @@ public class CategoryController {
         return new ResponseEntity<>(categoryService.findById(id), HttpStatus.OK);
     }
 
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<CategoryModel> update(@PathVariable UUID id, @RequestBody @Valid CategoryUpdateReqDto categoryUpdateReqDto) {
+        return new ResponseEntity<>(categoryService.update(id, categoryUpdateReqDto), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable UUID id) {
+        categoryService.delete(id);
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 
 }
