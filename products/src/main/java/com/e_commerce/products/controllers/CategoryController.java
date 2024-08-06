@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @Log4j2
@@ -23,6 +24,11 @@ public class CategoryController {
     @PostMapping
     public ResponseEntity<CategoryModel> save(@RequestBody @Valid CategoryCreateReqDto categoryCreateReqDto) {
         return new ResponseEntity<>(categoryService.save(categoryCreateReqDto), HttpStatus.CREATED);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<CategoryModel>> findAll() {
+        return new ResponseEntity<>(categoryService.findAll(), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")

@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -28,6 +29,10 @@ public class CategoryService {
         var newCategory = categoryMapper.toCategoryModel(categoryCreateReqDto);
 
         return categoryRepository.save(newCategory);
+    }
+
+    public List<CategoryModel> findAll() {
+        return categoryRepository.findAll();
     }
 
     public CategoryModel findById(UUID id) {

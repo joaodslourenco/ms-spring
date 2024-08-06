@@ -16,6 +16,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import java.util.List;
 import java.util.UUID;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -54,6 +55,20 @@ class CategoryControllerTest {
 
         Assertions.assertEquals(HttpStatus.OK, response.getStatusCode());
         Assertions.assertEquals(categoryModel, response.getBody());
+    }
+
+    @Test
+    @DisplayName("findAll returns list of categories when successful")
+    void findAll_ReturnsListOfCategories_WhenSuccessful() {
+        CategoryModel categoryModel = CategoryCreator.validCategory;
+        Mockito.when(categoryService.findAll()).thenReturn(CategoryCreator.listOfCategories);
+
+        ResponseEntity<List<CategoryModel>> response = categoryController.findAll();
+
+        Assertions.assertEquals(HttpStatus.OK, response.getStatusCode());
+        Assertions.assertNotNull(response.getBody());
+        Assertions.assertFalse(response.getBody().isEmpty());
+        Assertions.assertEquals(categoryModel, response.getBody().getFirst());
     }
 
     @Test

@@ -4,6 +4,7 @@ import com.e_commerce.products.dtos.CategoryCreateReqDto;
 import com.e_commerce.products.dtos.CategoryUpdateReqDto;
 import com.e_commerce.products.models.CategoryModel;
 
+import java.util.List;
 import java.util.UUID;
 
 
@@ -30,5 +31,6 @@ public class CategoryCreator {
             .imageUrl("http://image.com")
             .build();
 
+    public static final List<CategoryModel> listOfCategories = List.of(validCategory, validCategory);
 
 }

@@ -89,6 +89,20 @@ class CategoryServiceTest {
     }
 
     @Test
+    @DisplayName("Find all returns list of categories when successful")
+    void findAll_ReturnsListOfCategories_WhenSuccessful() {
+        CategoryModel categoryModel = CategoryCreator.validCategory;
+        Mockito.when(categoryRepository.findAll()).thenReturn(CategoryCreator.listOfCategories);
+
+        var result = categoryService.findAll();
+
+        Assertions.assertNotNull(result);
+        Assertions.assertFalse(result.isEmpty());
+        Assertions.assertEquals(categoryModel, result.getFirst());
+    }
+
+
+    @Test
     @DisplayName("Update category modifies category when successful")
     void update_ModifiesCategory_WhenSuccessful() {
         UUID id = UUID.randomUUID();
@@ -103,7 +117,8 @@ class CategoryServiceTest {
     }
 
     @Test
-    void deleteCategorySuccessfully() {
+    @DisplayName("Delete removes category when successful")
+    void delete_RemovesCategory_WhenSuccessful() {
         UUID id = UUID.randomUUID();
         CategoryModel categoryModel = new CategoryModel();
         Mockito.when(categoryRepository.findById(id)).thenReturn(Optional.of(categoryModel));
