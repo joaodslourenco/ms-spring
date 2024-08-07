@@ -2,6 +2,7 @@ package com.e_commerce.products.services;
 
 import com.e_commerce.products.dtos.ProductCreateReqDto;
 import com.e_commerce.products.dtos.ProductUpdateReqDto;
+import com.e_commerce.products.exceptions.BadRequestException;
 import com.e_commerce.products.mappers.ProductMapper;
 import com.e_commerce.products.models.ProductModel;
 import com.e_commerce.products.repositories.ProductRepository;
@@ -32,15 +33,13 @@ public class ProductService {
 
     public ProductModel findById(UUID id) {
         return productRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Product not found"));
+                .orElseThrow(() -> new BadRequestException("Product not found"));
     }
 
     public Page<ProductModel> findAllPaginated(int page, int size, String categoryId) {
         var pageable = PageRequest.of(page, size);
 
-        if (categoryId == null) {
-            return productRepository.findAll(pageable);
-        }
+        if (categoryId == null) return productRepository.findAll(pageable);
 
         return productRepository.findByCategoryId(UUID.fromString(categoryId), pageable);
     }
@@ -50,9 +49,7 @@ public class ProductService {
 
         productMapper.updateProductFromDto(productUpdateReqDto, existingProduct);
 
-        if (productUpdateReqDto.categoryId() == null) {
-            return productRepository.save(existingProduct);
-        }
+        if (productUpdateReqDto.categoryId() == null) return productRepository.save(existingProduct);
 
         UUID categoryId = UUID.fromString(productUpdateReqDto.categoryId());
         var category = categoryService.findById(categoryId);

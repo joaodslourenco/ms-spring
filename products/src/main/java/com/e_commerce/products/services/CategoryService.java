@@ -2,6 +2,7 @@ package com.e_commerce.products.services;
 
 import com.e_commerce.products.dtos.CategoryCreateReqDto;
 import com.e_commerce.products.dtos.CategoryUpdateReqDto;
+import com.e_commerce.products.exceptions.BadRequestException;
 import com.e_commerce.products.mappers.CategoryMapper;
 import com.e_commerce.products.models.CategoryModel;
 import com.e_commerce.products.repositories.CategoryRepository;
@@ -23,7 +24,7 @@ public class CategoryService {
         var existingCategory = categoryRepository.findByNameCaseInsensitive(categoryCreateReqDto.name());
 
         if (existingCategory != null) {
-            throw new RuntimeException("Category already exists");
+            throw new BadRequestException("Category already exists");
         }
 
         var newCategory = categoryMapper.toCategoryModel(categoryCreateReqDto);
@@ -37,7 +38,7 @@ public class CategoryService {
 
     public CategoryModel findById(UUID id) {
         return categoryRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Category not found"));
+                .orElseThrow(() -> new BadRequestException("Category not found"));
     }
 
     public CategoryModel update(UUID id, CategoryUpdateReqDto categoryUpdateReqDto) {
