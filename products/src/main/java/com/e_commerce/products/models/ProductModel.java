@@ -38,7 +38,7 @@ public class ProductModel implements Serializable {
     @Column(name = "image_url", nullable = false)
     private String imageUrl;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "category_id", referencedColumnName = "id")
     private CategoryModel category;
 

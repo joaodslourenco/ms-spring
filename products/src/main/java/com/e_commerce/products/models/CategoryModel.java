@@ -1,10 +1,12 @@
 package com.e_commerce.products.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.List;
 import java.util.UUID;
 
 @Setter
@@ -30,4 +32,8 @@ public class CategoryModel implements Serializable {
 
     @Column(name = "image_url", nullable = false)
     private String imageUrl;
+
+    @OneToMany(mappedBy = "category")
+    @JsonIgnore
+    private List<ProductModel> products;
 }
